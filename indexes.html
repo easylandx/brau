@@ -17,6 +17,8 @@
       --shadow: rgba(var(--rgb), 0.08);
     }
 
+    html { overflow-y: auto; -webkit-text-size-adjust: 100%; }
+
     body {
       background: var(--bg);
       display: flex;
@@ -28,7 +30,8 @@
       gap: 48px;
       /* side margins kept explicit so they never get zeroed */
       padding-top: 32px;
-      padding-bottom: 32px;
+      /* extra bottom room so the page always scrolls on iPhone and Safari can tuck the address bar away */
+      padding-bottom: 160px;
       padding-left: 20px;
       padding-right: 20px;
     }
