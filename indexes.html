@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🕰️ Reloj Braun AB 1</title>
+  <title>Reloj Braun AB 1</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🕰️%3C/text%3E%3C/svg%3E" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400&display=swap');
 
@@ -248,6 +249,10 @@
       animation: drain 8s linear forwards;
     }
     @keyframes drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+    @media (min-width: 601px) {
+      #btnBack { min-width: 112px; }
+    }
 
     /* Mobile: row 1 = Back / Speed / Slow, row 2 = Reset / About / Color */
     @media (max-width: 600px) {
@@ -529,6 +534,7 @@
   btnBack.addEventListener('click', () => {
     direction *= -1;
     btnBack.classList.toggle('active', direction < 0);
+    btnBack.textContent = direction < 0 ? 'Adelante' : 'Atrás';
     setBrand(direction < 0 ? 'Braun'.split('').reverse().join('') : 'Braun');
     updateStatus();
   });
@@ -556,6 +562,7 @@
     lastFrame = performance.now();
     applyColor();
     btnBack.classList.remove('active');
+    btnBack.textContent = 'Atrás';
     syncSpeedButtons();
     setBrand('Braun');
     hideAbout();
