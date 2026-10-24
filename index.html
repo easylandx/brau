@@ -487,7 +487,7 @@
     const secs = d.getSeconds();
     const ms   = d.getMilliseconds();
 
-    digitalEl.textContent = `${pad(d.getHours())}:${pad(mins)}:${pad(secs)}`;
+    digitalEl.textContent = `${pad(d.getHours())}:${pad(mins)}:${pad(secs)}.${String(ms).padStart(3, '0')}`;
 
     // Date follows the virtual clock: rolls back past midnight in reverse, forward at speed
     const dateKey = d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate();
