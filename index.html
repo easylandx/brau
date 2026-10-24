@@ -8,6 +8,14 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400&display=swap');
 
+    /* BraunLogo: a small custom typeface (letters B R A U N) drawn after the Braun logo,
+       with the tall arched A. Embedded so it works everywhere. */
+    @font-face {
+      font-family: 'BraunLogo';
+      src: url(data:font/ttf;base64,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) format('truetype');
+      font-display: block;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -47,14 +55,16 @@
 
     /* Brand label */
     .brand {
-      font-size: 11px;
-      font-weight: 300;
-      letter-spacing: 0.45em;
+      font-family: 'BraunLogo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
-      color: rgba(var(--rgb), 0.35);
+      color: rgba(var(--rgb), 0.6);
       transition: opacity 0.18s ease;
       /* offset trailing letter-spacing so it stays optically centred */
-      padding-left: 0.45em;
+      padding-left: 0.02em;
     }
     .brand.fade { opacity: 0; }
 
@@ -516,14 +526,17 @@
   }
   const btnAbout = document.getElementById('btnAbout');
 
+  // Brand label: plain text set in the BraunLogo typeface (the tall A is part of the font)
   function setBrand(text) {
-    if (brandEl.textContent === text) return;
+    if (brandEl.dataset.word === text) return;
     brandEl.classList.add('fade');
     setTimeout(() => {
       brandEl.textContent = text;
+      brandEl.dataset.word = text;
       brandEl.classList.remove('fade');
     }, 180);
   }
+  brandEl.dataset.word = 'Braun';
 
   // BACK: toggle time direction + spell brand backwards
   btnBack.addEventListener('click', () => {
