@@ -140,7 +140,7 @@
       justify-content: center;
       gap: 10px;
       width: 100%;
-      max-width: 520px;
+      max-width: 720px;
     }
 
     .btn, .cta-btn {
@@ -249,7 +249,7 @@
     }
     @keyframes drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
-    /* Mobile: row 1 = Back / Speed / Reset, row 2 = About / Color */
+    /* Mobile: row 1 = Back / Speed / Slow, row 2 = Reset / About / Color */
     @media (max-width: 600px) {
       .controls {
         display: grid;
@@ -261,7 +261,6 @@
         width: 100%;
         grid-column: span 2;
       }
-      #btnAbout, #btnColor { grid-column: span 3; }
       .controls .btn {
         letter-spacing: 0.16em;
         padding-left: 6px;
@@ -292,6 +291,7 @@
   <div class="controls">
     <button class="btn" id="btnBack" type="button">Atrás</button>
     <button class="btn" id="btnSpeed" type="button">Velocidad</button>
+    <button class="btn" id="btnSlow" type="button">Lento</button>
     <button class="btn" id="btnReset" type="button">Reiniciar</button>
     <button class="btn" id="btnAbout" type="button">Acerca de</button>
     <button class="btn" id="btnColor" type="button">Color</button>
@@ -337,6 +337,7 @@
     [255, 255, 255]  // white
   ];
   const MAX_SPEED = 65536;
+  const MIN_SPEED = 1 / 1024;
 
   let colorIndex = 0;
   let direction = 1;
@@ -458,6 +459,7 @@
     const parts = [];
     if (direction < 0) parts.push('◀');
     if (speed > 1) parts.push('×' + speed);
+    else if (speed < 1) parts.push('×1/' + Math.round(1 / speed));
     statusEl.textContent = parts.join(' ');
   }
 
@@ -506,6 +508,12 @@
   const brandEl = document.getElementById('brand');
   const btnBack = document.getElementById('btnBack');
   const btnSpeed = document.getElementById('btnSpeed');
+  const btnSlow = document.getElementById('btnSlow');
+
+  function syncSpeedButtons() {
+    btnSpeed.classList.toggle('active', speed > 1);
+    btnSlow.classList.toggle('active', speed < 1);
+  }
   const btnAbout = document.getElementById('btnAbout');
 
   function setBrand(text) {
@@ -528,7 +536,14 @@
   // SPEED: double each press (wraps back to x1 after x65536)
   btnSpeed.addEventListener('click', () => {
     speed = speed >= MAX_SPEED ? 1 : speed * 2;
-    btnSpeed.classList.toggle('active', speed > 1);
+    syncSpeedButtons();
+    updateStatus();
+  });
+
+  // SLOW: halve the speed on each press (wraps back to x1 after x1/1024)
+  btnSlow.addEventListener('click', () => {
+    speed = speed <= MIN_SPEED ? 1 : speed / 2;
+    syncSpeedButtons();
     updateStatus();
   });
 
@@ -541,7 +556,7 @@
     lastFrame = performance.now();
     applyColor();
     btnBack.classList.remove('active');
-    btnSpeed.classList.remove('active');
+    syncSpeedButtons();
     setBrand('Braun');
     hideAbout();
     updateStatus();
