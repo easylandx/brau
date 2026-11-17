@@ -481,11 +481,12 @@
     .cuckoo.ring { box-shadow: 0 0 26px rgba(var(--rgb), 0.55); border-color: var(--fluor); }
 
     #btnAwake { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
-    #btnWorld, #btnFocus { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
+    #btnWorld, #btnFocus, #btnBugle { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
     @media (max-width: 600px) {
       #btnAwake { grid-column: 1 / span 2; }
-      #btnWorld { grid-column: 3 / span 2; }
-      #btnFocus { grid-column: 5 / span 2; }
+      #btnBugle { grid-column: 3 / span 2; }
+      #btnWorld { grid-column: 5 / span 2; }
+      #btnFocus { grid-column: 1 / span 2; }
     }
 
     .btn[hidden] { display: none; }
@@ -941,6 +942,7 @@
     <button class="btn" id="btnAbout" type="button">About</button>
     <button class="btn" id="btnColor" type="button">Color</button>
     <button class="btn" id="btnAwake" type="button" aria-pressed="false">Auto sleep</button>
+    <button class="btn" id="btnBugle" type="button" aria-pressed="false">Bugle off</button>
     <button class="btn" id="btnWorld" type="button" aria-pressed="true">World on</button>
     <button class="btn" id="btnFocus" type="button" aria-pressed="false">Focus</button>
     <button class="btn active" id="btnTick" type="button" hidden>Tick on</button>
@@ -1074,6 +1076,7 @@
       tickOn: 'Tick on', tickOff: 'Tick off',
       back: 'Back', forward: 'Forward', speed: 'Speed', slow: 'Slow', reset: 'Reset', about: 'About', color: 'Color',
       awakeOn: 'Always on', awakeOff: 'Auto sleep', notAllowed: 'Not allowed',
+      bugleOn: 'Bugle on', bugleOff: 'Bugle off',
       worldOn: 'World on', worldOff: 'World off', focus: 'Focus', focusShow: 'Show',
       ch_cuckoo: 'Cuckoo', ch_westminster: 'Westminster', ch_bell: 'Soft bell', ch_tick: 'Mechanical tick',
       chOff: 'Chime off', volume: 'Volume',
@@ -1097,6 +1100,7 @@
       tickOn: 'Tic on', tickOff: 'Tic off',
       back: 'Atrás', forward: 'Adelante', speed: 'Rápido', slow: 'Lento', reset: 'Reiniciar', about: 'Acerca', color: 'Color',
       awakeOn: 'Siempre on', awakeOff: 'Reposo auto', notAllowed: 'No permitido',
+      bugleOn: 'Corneta on', bugleOff: 'Corneta off',
       worldOn: 'Mundo on', worldOff: 'Mundo off', focus: 'Foco', focusShow: 'Mostrar',
       ch_cuckoo: 'Cuco', ch_westminster: 'Westminster', ch_bell: 'Campana suave', ch_tick: 'Tic mecánico',
       chOff: 'Sonido off', volume: 'Volumen',
@@ -1126,6 +1130,7 @@
       ['Cuckoo', 'Choose a chime and its volume, or tap the little house to hear it. It sounds every half hour.'],
       ['Speak', 'The clock says the time out loud every 1 to 60 minutes.'],
       ['Auto sleep', 'Switch to “Always on” to keep the screen awake so the clock stays visible.'],
+      ['Bugle', 'One switch turns on the military bugle calls: First Call 06:50, Reveille 07:00, Mess Call 07:15, 12:00 and 17:30, Assembly 07:45, Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30 and Taps 22:00.'],
       ['Pendulum tick', 'In Pendulum mode you can turn the ticking sound on or off.'],
       ['AR wall view', 'Where available, “View on my wall” places the clock in your camera view. Drag to move it, pinch to resize.'],
       ['Language', 'The EN / ES flags at the top right switch the language.']
@@ -1143,6 +1148,7 @@
       ['Cuco', 'Elige una campanada y su volumen, o toca la casita para oírla. Suena cada media hora.'],
       ['Voz', 'El reloj dice la hora en voz alta cada 1 a 60 minutos.'],
       ['Reposo auto', 'Cambia a “Siempre on” para mantener la pantalla encendida y ver siempre el reloj.'],
+      ['Corneta', 'Un solo botón activa los toques militares de corneta: Primera llamada 06:50, Diana 07:00, Rancho 07:15, 12:00 y 17:30, Asamblea 07:45, Llamada al trabajo 08:00, Fin de actividad 16:30, Retreta 17:00, Retreta nocturna 21:30 y Silencio 22:00.'],
       ['Tic del péndulo', 'En modo Péndulo puedes activar o desactivar el sonido del tic.'],
       ['Vista AR en la pared', 'Si tu dispositivo lo permite, “Ver en mi pared” coloca el reloj en la vista de la cámara. Arrastra para moverlo y pellizca para ajustarlo.'],
       ['Idioma', 'Las banderas EN / ES de arriba a la derecha cambian el idioma.']
@@ -1287,6 +1293,7 @@
     frameNow = now;
     checkCuckoo(d, dt);
     checkSpeak(d, dt);
+    checkBugle(d, dt);
     updateWorld(real, d);
     checkTick(dt);
     wxTick();
@@ -2284,7 +2291,7 @@
     loc = tzSel < 0 ? homeLoc : { lat: CITY_LL[tzSel][0], lon: CITY_LL[tzSel][1], gps: false };
     sunCache = { key: null, v: null }; moonCache = { key: null, v: null }; twCache = { key: null, v: null };
     wx.data = null; wx.aq = null; wx.err = false; wx.key = ''; wx.next = 0;
-    lastDateKey = ''; lastWorldKey = -1; lastBucket = null; lastSpeak = null;
+    lastDateKey = ''; lastWorldKey = -1; lastBucket = null; lastSpeak = null; lastBug = null;
     worldCells.forEach((c, k) => {
       c.el.classList.toggle('sel', k === tzSel);
       c.el.setAttribute('aria-pressed', k === tzSel ? 'true' : 'false');
@@ -2845,6 +2852,105 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') openSpeakMenu(false); });
   syncSpeakUI();
 
+  /* ---------- Bugle calls: one switch, military daily schedule (synthesised, no audio files) ---------- */
+  const btnBugle = document.getElementById('btnBugle');
+  let bugleOn = false, bugleBusy = false, bugleTimer = null;
+  let lastBug = null, lastBugVT = null;
+  try { bugleOn = localStorage.getItem('braunBugle') === 'on'; } catch (e) {}
+  if (!(window.AudioContext || window.webkitAudioContext)) btnBugle.hidden = true;
+
+  // Bugle notes (open harmonics only): "NOTE:beats", R = rest
+  const BF = { G3: 196, C4: 261.63, E4: 329.63, G4: 392, C5: 523.25, E5: 659.25, G5: 783.99 };
+  const BUGLE = {
+    first:    { beat: 0.40, s: 'G4:.5 C5:.5 E5:.5 G5:1.5 R:.25 E5:.5 C5:.5 E5:.5 G5:2' },
+    reveille: { beat: 0.34, s: 'G4:.33 G4:.33 G4:.33 C5:1 E5:.33 E5:.33 E5:.33 G5:1.5 R:.25 G5:.33 E5:.33 C5:.33 E5:.33 G5:.33 E5:.33 C5:2' },
+    mess:     { beat: 0.38, s: 'G4:.25 G4:.25 C5:.5 G4:.25 G4:.25 C5:.5 E5:.25 E5:.25 G5:.5 E5:.5 C5:.5 G4:.25 C5:.25 E5:.5 C5:1.5' },
+    assembly: { beat: 0.40, s: 'C5:.5 C5:.25 E5:.25 G5:1 E5:.5 C5:.5 G4:1 R:.25 C5:.5 E5:.5 G5:2' },
+    work:     { beat: 0.34, s: 'G4:.3 C5:.3 E5:.3 G5:.7 E5:.3 G5:.3 C5:.5 E5:.5 G5:1.8' },
+    recall:   { beat: 0.40, s: 'G4:.5 G4:.5 C5:.5 E5:1.5 R:.25 G4:.5 C5:.5 E5:.5 C5:1.8' },
+    retreat:  { beat: 0.46, s: 'G4:.5 C5:.5 E5:.5 G5:1.5 E5:.5 C5:.5 G4:.5 C5:1.5 R:.25 E5:.5 G5:.5 C5:2' },
+    tattoo:   { beat: 0.50, s: 'G4:.5 G4:.5 C5:1 G4:.5 G4:.5 C5:1 E5:.5 C5:.5 G4:1.5 R:.25 C5:.5 E5:.5 C5:2' },
+    taps:     { beat: 0.62, s: 'G3:.75 G3:.25 C4:2 G3:.75 G3:.25 C4:2 G3:.75 C4:.25 E4:2.5 G4:2 R:.25 E4:.75 C4:.25 E4:2 C4:2 R:.25 G3:.75 G3:.25 C4:3.5' }
+  };
+  // Minute of the day -> call (First Call 06:50, Reveille 07:00, Mess 07:15 / 12:00 / 17:30, Assembly 07:45,
+  // Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30, Taps 22:00)
+  const BUGLE_AT = { 410: 'first', 420: 'reveille', 435: 'mess', 465: 'assembly', 480: 'work', 720: 'mess',
+                     990: 'recall', 1020: 'retreat', 1050: 'mess', 1290: 'tattoo', 1320: 'taps' };
+
+  function bugleNote(t0, f, dur) {
+    const o = audioCtx.createOscillator(), o2 = audioCtx.createOscillator();
+    const lfo = audioCtx.createOscillator(), lg = audioCtx.createGain();
+    const flt = audioCtx.createBiquadFilter(), g = audioCtx.createGain(), g2 = audioCtx.createGain();
+    o.type = 'sawtooth'; o2.type = 'square';
+    [o, o2].forEach(x => {
+      x.frequency.setValueAtTime(f * 0.975, t0);
+      x.frequency.exponentialRampToValueAtTime(f, t0 + 0.05);
+    });
+    lfo.frequency.value = 5.2; lg.gain.value = f * 0.004;
+    lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+    flt.type = 'lowpass'; flt.frequency.value = 2300; flt.Q.value = 1.2;
+    g2.gain.value = 0.35;
+    const hold = Math.max(0.06, dur - 0.07);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.28, t0 + 0.045);
+    g.gain.setValueAtTime(0.24, t0 + hold);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g); g.connect(master);
+    [o, o2, lfo].forEach(x => { x.start(t0); x.stop(t0 + dur + 0.05); });
+  }
+
+  function playBugle(name) {
+    const c = BUGLE[name];
+    if (!c || !audioCtx || audioCtx.state !== 'running') return;
+    let at = audioCtx.currentTime + 0.05;
+    c.s.split(' ').forEach(tok => {
+      const p = tok.split(':'), dur = parseFloat(p[1]) * c.beat;
+      if (p[0] !== 'R') bugleNote(at, BF[p[0]], Math.max(0.1, dur * 0.94));
+      at += dur;
+    });
+    bugleBusy = true;
+    clearTimeout(bugleTimer);
+    bugleTimer = setTimeout(() => { bugleBusy = false; }, (at - audioCtx.currentTime) * 1000 + 300);
+  }
+
+  // Never talk over the cuckoo / chime or another call
+  function bugleWhenFree(name, tries) {
+    if (!bugleOn) return;
+    if ((cuckooBusy || bugleBusy) && (tries || 0) < 80) { setTimeout(() => bugleWhenFree(name, (tries || 0) + 1), 700); return; }
+    playBugle(name);
+  }
+
+  function checkBugle(d, dt) {
+    const tm = d.getHours() * 60 + d.getMinutes();
+    const key = (d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate()) * 2000 + tm;
+    const cur = { key, t: tm };
+    const prev = lastBug;
+    lastBug = cur;
+    const step = Math.abs(virtualTime - lastBugVT);
+    const jumped = lastBugVT !== null && step > dt * speed + 1500;
+    lastBugVT = virtualTime;
+    if (!bugleOn || !prev || prev.key === key || jumped || dt > 1500 || speed > 8) return;
+    const hit = direction > 0 ? cur : prev;      // forward: the new minute starts here; reverse: the old one did
+    const name = BUGLE_AT[hit.t];
+    if (name) bugleWhenFree(name);
+  }
+
+  function syncBugleBtn() {
+    btnBugle.textContent = bugleOn ? t('bugleOn') : t('bugleOff');
+    btnBugle.classList.toggle('active', bugleOn);
+    btnBugle.setAttribute('aria-pressed', bugleOn ? 'true' : 'false');
+  }
+  btnBugle.addEventListener('click', () => {
+    unlockAudio();
+    bugleOn = !bugleOn;
+    lastBug = null;
+    if (!bugleOn && bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
+    try { localStorage.setItem('braunBugle', bugleOn ? 'on' : 'off'); } catch (e) {}
+    syncBugleBtn();
+    if (bugleOn) setTimeout(() => playBugle('work'), 150);      // short sample so you hear it is armed
+  });
+  syncBugleBtn();
+
   /* ---------- Keep screen awake ---------- */
   const btnAwake = document.getElementById('btnAwake');
   let awakeOn = false;
@@ -3311,6 +3417,7 @@
     syncSoundBtn();
     syncSpeakUI();
     syncAwakeBtn();
+    syncBugleBtn();
     syncWorld();
     syncTickBtn();
     chimeOpts.forEach(o => { o.textContent = o.dataset.chime === 'off' ? L.chOff : L['ch_' + o.dataset.chime]; });
