@@ -753,6 +753,7 @@
     .help-i:last-child { border-bottom: 0; }
     .help-h { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fluor); margin-bottom: 4px; }
     .help-t { font-size: 13px; font-weight: 300; line-height: 1.5; color: rgba(var(--rgb), 0.78); }
+    .help-demo { margin-top: 10px; min-width: 0; letter-spacing: 0.15em; padding-left: 14px; padding-right: 12px; }
 
     /* ---------- World city day/night dot ---------- */
     .wc { position: relative; }
@@ -1119,7 +1120,7 @@
     }
   };
   I18N.en.help = {
-    title: 'Quick guide', btn: 'Help', close: 'Close',
+    title: 'Quick guide', btn: 'Help', close: 'Close', demo: '▶ Play all calls', demoStop: '■ Stop',
     items: [
       ['Clock styles', 'Tap Analog, Split-Flap, Word, Digital, Pendulum or Sun & Moon to change how the time looks.'],
       ['World cities', 'Tap any city on the sides to see its time and weather. Tap it again to come back. “World” hides or shows them.'],
@@ -1130,14 +1131,14 @@
       ['Cuckoo', 'Choose a chime and its volume, or tap the little house to hear it. It sounds every half hour.'],
       ['Speak', 'The clock says the time out loud every 1 to 60 minutes.'],
       ['Auto sleep', 'Switch to “Always on” to keep the screen awake so the clock stays visible.'],
-      ['Bugle', 'One switch turns on the military bugle calls: First Call 06:50, Reveille 07:00, Mess Call 07:15, 12:00 and 17:30, Assembly 07:45, Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30 and Taps 22:00. Also Sick Call 07:30, Fatigue Call 08:15 and Mail Call 12:30; Pay Call on the 1st and 15th at 10:00, Church Call on Sundays at 09:30, Fire Call on Wednesdays at 10:30 and Charge on Fridays at 15:00.'],
+      ['Bugle', 'One switch turns on the military bugle calls: First Call 06:50, Reveille 07:00, Mess Call 07:15, 12:00 and 17:30, Assembly 07:45, Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30 and Taps 22:00. Also Sick Call 07:30, Fatigue Call 08:15 and Mail Call 12:30; Pay Call on the 1st and 15th at 10:00, Church Call on Sundays at 09:30, Fire Call on Wednesdays at 10:30 and Charge on Fridays at 15:00.', 'demo'],
       ['Pendulum tick', 'In Pendulum mode you can turn the ticking sound on or off.'],
       ['AR wall view', 'Where available, “View on my wall” places the clock in your camera view. Drag to move it, pinch to resize.'],
       ['Language', 'The EN / ES flags at the top right switch the language.']
     ]
   };
   I18N.es.help = {
-    title: 'Guía rápida', btn: 'Ayuda', close: 'Cerrar',
+    title: 'Guía rápida', btn: 'Ayuda', close: 'Cerrar', demo: '▶ Oír todos los toques', demoStop: '■ Parar',
     items: [
       ['Estilos de reloj', 'Toca Analógico, Panel, Palabras, Digital, Péndulo o Sol y Luna para cambiar el aspecto de la hora.'],
       ['Ciudades del mundo', 'Toca una ciudad de los lados para ver su hora y su tiempo. Tócala de nuevo para volver. “Mundo” las oculta o muestra.'],
@@ -1148,7 +1149,7 @@
       ['Cuco', 'Elige una campanada y su volumen, o toca la casita para oírla. Suena cada media hora.'],
       ['Voz', 'El reloj dice la hora en voz alta cada 1 a 60 minutos.'],
       ['Reposo auto', 'Cambia a “Siempre on” para mantener la pantalla encendida y ver siempre el reloj.'],
-      ['Corneta', 'Un solo botón activa los toques militares de corneta: Primera llamada 06:50, Diana 07:00, Rancho 07:15, 12:00 y 17:30, Asamblea 07:45, Llamada al trabajo 08:00, Fin de actividad 16:30, Retreta 17:00, Retreta nocturna 21:30 y Silencio 22:00. Además: Llamada a enfermería 07:30, Fajina 08:15 y Correo 12:30; Paga los días 1 y 15 a las 10:00, Servicio religioso los domingos a las 09:30, Incendio los miércoles a las 10:30 y A la carga los viernes a las 15:00.'],
+      ['Corneta', 'Un solo botón activa los toques militares de corneta: Primera llamada 06:50, Diana 07:00, Rancho 07:15, 12:00 y 17:30, Asamblea 07:45, Llamada al trabajo 08:00, Fin de actividad 16:30, Retreta 17:00, Retreta nocturna 21:30 y Silencio 22:00. Además: Llamada a enfermería 07:30, Fajina 08:15 y Correo 12:30; Paga los días 1 y 15 a las 10:00, Servicio religioso los domingos a las 09:30, Incendio los miércoles a las 10:30 y A la carga los viernes a las 15:00.', 'demo'],
       ['Tic del péndulo', 'En modo Péndulo puedes activar o desactivar el sonido del tic.'],
       ['Vista AR en la pared', 'Si tu dispositivo lo permite, “Ver en mi pared” coloca el reloj en la vista de la cámara. Arrastra para moverlo y pellizca para ajustarlo.'],
       ['Idioma', 'Las banderas EN / ES de arriba a la derecha cambian el idioma.']
@@ -3000,6 +3001,53 @@
   });
   syncBugleBtn();
 
+  /* ----- Help window: play every call one after another ----- */
+  const BUGLE_DEMO = ['first', 'reveille', 'mess', 'sick', 'assembly', 'work', 'fatigue', 'mail', 'recall', 'retreat', 'tattoo', 'taps', 'church', 'pay', 'fire', 'charge'];
+  const BUGLE_NAMES = {
+    en: { first: 'First Call', reveille: 'Reveille', mess: 'Mess Call', sick: 'Sick Call', assembly: 'Assembly', work: 'Work Call',
+          fatigue: 'Fatigue Call', mail: 'Mail Call', recall: 'Recall', retreat: 'Retreat', tattoo: 'Tattoo', taps: 'Taps',
+          church: 'Church Call', pay: 'Pay Call', fire: 'Fire Call', charge: 'Charge' },
+    es: { first: 'Primera llamada', reveille: 'Diana', mess: 'Rancho', sick: 'Enfermería', assembly: 'Asamblea', work: 'Llamada al trabajo',
+          fatigue: 'Fajina', mail: 'Correo', recall: 'Fin de actividad', retreat: 'Retreta', tattoo: 'Retreta nocturna', taps: 'Silencio',
+          church: 'Servicio religioso', pay: 'Paga', fire: 'Incendio', charge: 'A la carga' }
+  };
+  let demoOn = false, demoIdx = 0, demoTimer = null;
+  function bugleLen(name) {
+    const c = BUGLE[name];
+    return c.s.split(' ').reduce((a, k) => a + parseFloat(k.split(':')[1]) * c.beat, 0);
+  }
+  function syncDemoBtn() {
+    const b = document.getElementById('bugleDemoBtn');
+    if (!b) return;
+    const H = I18N[lang].help;
+    const cur = demoIdx > 0 ? BUGLE_DEMO[demoIdx - 1] : null;
+    b.textContent = demoOn ? H.demoStop + (cur ? ' · ' + BUGLE_NAMES[lang][cur] + ' · ' + demoIdx + '/' + BUGLE_DEMO.length : '') : H.demo;
+    b.classList.toggle('active', demoOn);
+  }
+  function stopBugleDemo() {
+    if (!demoOn) return;
+    demoOn = false;
+    clearTimeout(demoTimer);
+    if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
+    syncDemoBtn();
+  }
+  function demoStep() {
+    if (!demoOn) return;
+    if (demoIdx >= BUGLE_DEMO.length) { demoOn = false; syncDemoBtn(); return; }
+    if (bugleBusy) { demoTimer = setTimeout(demoStep, 300); return; }
+    const name = BUGLE_DEMO[demoIdx++];
+    syncDemoBtn();
+    playBugle(name, 1);
+    demoTimer = setTimeout(demoStep, bugleLen(name) * 1000 + 700);
+  }
+  function toggleBugleDemo() {
+    if (demoOn) { stopBugleDemo(); return; }
+    unlockAudio();
+    demoOn = true; demoIdx = 0;
+    syncDemoBtn();
+    demoTimer = setTimeout(demoStep, 250);
+  }
+
   /* ---------- Keep screen awake ---------- */
   const btnAwake = document.getElementById('btnAwake');
   let awakeOn = false;
@@ -3432,12 +3480,21 @@
       const row = document.createElement('div'); row.className = 'help-i';
       const h = document.createElement('div'); h.className = 'help-h'; h.textContent = it[0];
       const p = document.createElement('div'); p.className = 'help-t'; p.textContent = it[1];
-      row.appendChild(h); row.appendChild(p); body.appendChild(row);
+      row.appendChild(h); row.appendChild(p);
+      if (it[2] === 'demo') {
+        const db = document.createElement('button');
+        db.type = 'button'; db.id = 'bugleDemoBtn'; db.className = 'btn help-demo';
+        db.addEventListener('click', toggleBugleDemo);
+        row.appendChild(db);
+      }
+      body.appendChild(row);
     });
+    syncDemoBtn();
   }
   function openHelp(on) {
     const el = document.getElementById('help');
     el.hidden = !on;
+    if (!on) stopBugleDemo();
     if (on) { renderHelp(); document.getElementById('helpBody').scrollTop = 0; document.getElementById('helpClose').focus({ preventScroll: true }); }
     else document.getElementById('btnHelp').focus({ preventScroll: true });
   }
