@@ -753,7 +753,9 @@
     .help-i:last-child { border-bottom: 0; }
     .help-h { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fluor); margin-bottom: 4px; }
     .help-t { font-size: 13px; font-weight: 300; line-height: 1.5; color: rgba(var(--rgb), 0.78); }
-    .help-demo { margin-top: 10px; min-width: 0; letter-spacing: 0.15em; padding-left: 14px; padding-right: 12px; }
+    .help-demo-row { display: flex; align-items: stretch; gap: 8px; margin-top: 10px; }
+    .help-demo { flex: 1; min-width: 0; letter-spacing: 0.15em; padding-left: 14px; padding-right: 12px; }
+    .help-skip { flex: 0 0 auto; min-width: 0; letter-spacing: 0; padding: 0 13px; font-size: 12px; }
 
     /* ---------- World city day/night dot ---------- */
     .wc { position: relative; }
@@ -1120,7 +1122,7 @@
     }
   };
   I18N.en.help = {
-    title: 'Quick guide', btn: 'Help', close: 'Close', demo: '▶ Play all calls', demoStop: '■ Stop',
+    title: 'Quick guide', btn: 'Help', close: 'Close', demo: '▶ Play all calls', demoStop: '■ Stop', prevCall: 'Previous call', nextCall: 'Next call',
     items: [
       ['Clock styles', 'Tap Analog, Split-Flap, Word, Digital, Pendulum or Sun & Moon to change how the time looks.'],
       ['World cities', 'Tap any city on the sides to see its time and weather. Tap it again to come back. “World” hides or shows them.'],
@@ -1138,7 +1140,7 @@
     ]
   };
   I18N.es.help = {
-    title: 'Guía rápida', btn: 'Ayuda', close: 'Cerrar', demo: '▶ Oír todos los toques', demoStop: '■ Parar',
+    title: 'Guía rápida', btn: 'Ayuda', close: 'Cerrar', demo: '▶ Oír todos los toques', demoStop: '■ Parar', prevCall: 'Toque anterior', nextCall: 'Toque siguiente',
     items: [
       ['Estilos de reloj', 'Toca Analógico, Panel, Palabras, Digital, Péndulo o Sol y Luna para cambiar el aspecto de la hora.'],
       ['Ciudades del mundo', 'Toca una ciudad de los lados para ver su hora y su tiempo. Tócala de nuevo para volver. “Mundo” las oculta o muestra.'],
@@ -3055,6 +3057,19 @@
     playBugle(name, 1);
     demoTimer = setTimeout(demoStep, bugleLen(name) * 1000 + 700);
   }
+  // |◀ / ▶|: jump to the previous or next call (starts the demo if it was not running)
+  function skipBugleDemo(dir) {
+    unlockAudio();
+    clearTimeout(demoTimer);
+    if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
+    let target = demoOn ? demoIdx - 1 + dir : (dir > 0 ? 0 : BUGLE_DEMO.length - 1);
+    if (target < 0) target = 0;
+    if (target >= BUGLE_DEMO.length) { demoOn = false; demoIdx = BUGLE_DEMO.length; syncDemoBtn(); return; }
+    demoOn = true;
+    demoIdx = target;
+    syncDemoBtn();
+    demoTimer = setTimeout(demoStep, 120);
+  }
   function toggleBugleDemo() {
     if (demoOn) { stopBugleDemo(); return; }
     unlockAudio();
@@ -3497,10 +3512,20 @@
       const p = document.createElement('div'); p.className = 'help-t'; p.textContent = it[1];
       row.appendChild(h); row.appendChild(p);
       if (it[2] === 'demo') {
-        const db = document.createElement('button');
-        db.type = 'button'; db.id = 'bugleDemoBtn'; db.className = 'btn help-demo';
-        db.addEventListener('click', toggleBugleDemo);
-        row.appendChild(db);
+        const dr = document.createElement('div'); dr.className = 'help-demo-row';
+        const mk = (cls, id, label, fn) => {
+          const b = document.createElement('button');
+          b.type = 'button'; b.className = 'btn ' + cls;
+          if (id) b.id = id;
+          if (label) b.setAttribute('aria-label', label);
+          b.addEventListener('click', fn);
+          dr.appendChild(b);
+          return b;
+        };
+        mk('help-skip', 'bugleDemoPrev', H.prevCall, () => skipBugleDemo(-1)).textContent = '|\u25C0';
+        mk('help-demo', 'bugleDemoBtn', null, toggleBugleDemo);
+        mk('help-skip', 'bugleDemoNext', H.nextCall, () => skipBugleDemo(1)).textContent = '\u25B6|';
+        row.appendChild(dr);
       }
       body.appendChild(row);
     });
