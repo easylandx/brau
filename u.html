@@ -1130,7 +1130,7 @@
       ['Cuckoo', 'Choose a chime and its volume, or tap the little house to hear it. It sounds every half hour.'],
       ['Speak', 'The clock says the time out loud every 1 to 60 minutes.'],
       ['Auto sleep', 'Switch to “Always on” to keep the screen awake so the clock stays visible.'],
-      ['Bugle', 'One switch turns on the military bugle calls: First Call 06:50, Reveille 07:00, Mess Call 07:15, 12:00 and 17:30, Assembly 07:45, Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30 and Taps 22:00.'],
+      ['Bugle', 'One switch turns on the military bugle calls: First Call 06:50, Reveille 07:00, Mess Call 07:15, 12:00 and 17:30, Assembly 07:45, Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30 and Taps 22:00. Also Sick Call 07:30, Fatigue Call 08:15 and Mail Call 12:30; Pay Call on the 1st and 15th at 10:00, Church Call on Sundays at 09:30, Fire Call on Wednesdays at 10:30 and Charge on Fridays at 15:00.'],
       ['Pendulum tick', 'In Pendulum mode you can turn the ticking sound on or off.'],
       ['AR wall view', 'Where available, “View on my wall” places the clock in your camera view. Drag to move it, pinch to resize.'],
       ['Language', 'The EN / ES flags at the top right switch the language.']
@@ -1148,7 +1148,7 @@
       ['Cuco', 'Elige una campanada y su volumen, o toca la casita para oírla. Suena cada media hora.'],
       ['Voz', 'El reloj dice la hora en voz alta cada 1 a 60 minutos.'],
       ['Reposo auto', 'Cambia a “Siempre on” para mantener la pantalla encendida y ver siempre el reloj.'],
-      ['Corneta', 'Un solo botón activa los toques militares de corneta: Primera llamada 06:50, Diana 07:00, Rancho 07:15, 12:00 y 17:30, Asamblea 07:45, Llamada al trabajo 08:00, Fin de actividad 16:30, Retreta 17:00, Retreta nocturna 21:30 y Silencio 22:00.'],
+      ['Corneta', 'Un solo botón activa los toques militares de corneta: Primera llamada 06:50, Diana 07:00, Rancho 07:15, 12:00 y 17:30, Asamblea 07:45, Llamada al trabajo 08:00, Fin de actividad 16:30, Retreta 17:00, Retreta nocturna 21:30 y Silencio 22:00. Además: Llamada a enfermería 07:30, Fajina 08:15 y Correo 12:30; Paga los días 1 y 15 a las 10:00, Servicio religioso los domingos a las 09:30, Incendio los miércoles a las 10:30 y A la carga los viernes a las 15:00.'],
       ['Tic del péndulo', 'En modo Péndulo puedes activar o desactivar el sonido del tic.'],
       ['Vista AR en la pared', 'Si tu dispositivo lo permite, “Ver en mi pared” coloca el reloj en la vista de la cámara. Arrastra para moverlo y pellizca para ajustarlo.'],
       ['Idioma', 'Las banderas EN / ES de arriba a la derecha cambian el idioma.']
@@ -2870,12 +2870,34 @@
     recall:   { beat: 0.40, s: 'G4:.5 G4:.5 C5:.5 E5:1.5 R:.25 G4:.5 C5:.5 E5:.5 C5:1.8' },
     retreat:  { beat: 0.46, s: 'G4:.5 C5:.5 E5:.5 G5:1.5 E5:.5 C5:.5 G4:.5 C5:1.5 R:.25 E5:.5 G5:.5 C5:2' },
     tattoo:   { beat: 0.50, s: 'G4:.5 G4:.5 C5:1 G4:.5 G4:.5 C5:1 E5:.5 C5:.5 G4:1.5 R:.25 C5:.5 E5:.5 C5:2' },
-    taps:     { beat: 0.62, s: 'G3:.75 G3:.25 C4:2 G3:.75 G3:.25 C4:2 G3:.75 C4:.25 E4:2.5 G4:2 R:.25 E4:.75 C4:.25 E4:2 C4:2 R:.25 G3:.75 G3:.25 C4:3.5' }
+    taps:     { beat: 0.62, s: 'G3:.75 G3:.25 C4:2 G3:.75 G3:.25 C4:2 G3:.75 C4:.25 E4:2.5 G4:2 R:.25 E4:.75 C4:.25 E4:2 C4:2 R:.25 G3:.75 G3:.25 C4:3.5' },
+    sick:     { beat: 0.40, s: 'G4:.25 G4:.25 G4:.5 C5:.5 C5:.25 E5:.25 G5:1 R:.25 G5:.25 E5:.25 C5:.5 G4:1.5' },
+    mail:     { beat: 0.36, s: 'C5:.25 E5:.25 G5:.5 G5:.25 E5:.25 C5:.5 E5:.25 G5:.25 G5:.5 C5:.25 E5:.25 G5:1.5' },
+    fatigue:  { beat: 0.38, s: 'G4:.5 C5:.5 C5:.5 E5:.5 G5:.5 E5:.5 C5:.5 G4:.5 C5:.5 E5:.5 C5:1.5' },
+    pay:      { beat: 0.36, s: 'C5:.25 C5:.25 E5:.5 G5:.5 E5:.25 G5:.25 C5:.5 E5:.5 G5:1.5 R:.25 G5:.25 E5:.25 C5:1.5' },
+    church:   { beat: 0.60, s: 'G4:1 C5:1 E5:2 R:.25 E5:1 C5:1 G4:2 R:.25 C5:1 E5:1 G5:3' },
+    fire:     { beat: 0.22, s: Array(4).fill('G5:.25 G5:.25 G5:.25 E5:.25 G5:.5 R:.25').join(' ') + ' C5:1.5' },
+    charge:   { beat: 0.30, s: 'G4:.25 C5:.25 E5:.25 G5:.5 E5:.25 G5:1.5 R:.25 G4:.25 C5:.25 E5:.25 G5:.5 E5:.25 G5:1.5 R:.25 E5:.25 G5:.25 C5:.5 G5:2.5' }
   };
   // Minute of the day -> call (First Call 06:50, Reveille 07:00, Mess 07:15 / 12:00 / 17:30, Assembly 07:45,
   // Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30, Taps 22:00)
-  const BUGLE_AT = { 410: 'first', 420: 'reveille', 435: 'mess', 465: 'assembly', 480: 'work', 720: 'mess',
-                     990: 'recall', 1020: 'retreat', 1050: 'mess', 1290: 'tattoo', 1320: 'taps' };
+  const BUGLE_AT = { 410: 'first', 420: 'reveille', 435: 'mess', 450: 'sick', 465: 'assembly', 480: 'work', 495: 'fatigue',
+                     720: 'mess', 750: 'mail', 990: 'recall', 1020: 'retreat', 1050: 'mess', 1290: 'tattoo', 1320: 'taps' };
+  // Calls that only sound on certain days (dow: 0 = Sunday ... 6 = Saturday; date = day of the month)
+  const BUGLE_SPECIAL = [
+    { t: 570, name: 'church', dow: [0] },        // Sundays 09:30
+    { t: 600, name: 'pay', date: [1, 15] },      // 1st and 15th, 10:00
+    { t: 630, name: 'fire', dow: [3] },          // Wednesdays 10:30 (drill)
+    { t: 900, name: 'charge', dow: [5] }         // Fridays 15:00
+  ];
+  // m = minutes since epoch of the shown wall clock
+  function bugleAt(m) {
+    const tm = ((m % 1440) + 1440) % 1440, dd = new Date(m * 60000);
+    for (const s of BUGLE_SPECIAL) {
+      if (s.t === tm && (!s.dow || s.dow.indexOf(dd.getUTCDay()) >= 0) && (!s.date || s.date.indexOf(dd.getUTCDate()) >= 0)) return s.name;
+    }
+    return BUGLE_AT[tm];
+  }
 
   function bugleNote(t0, f, dur) {
     const o = audioCtx.createOscillator(), o2 = audioCtx.createOscillator();
@@ -2955,7 +2977,7 @@
     if (hi - lo > 3000) return;
     const hits = [];
     for (let m = lo + 1; m <= hi; m++) {           // forward: minutes entered; reverse: minutes left
-      const name = BUGLE_AT[((m % 1440) + 1440) % 1440];
+      const name = bugleAt(m);
       if (name) hits.push(name);
     }
     if (direction < 0) hits.reverse();
