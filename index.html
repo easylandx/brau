@@ -277,6 +277,27 @@
         grid-column: span 2;
       }
     }
+
+    /* ---------- AR wall view ---------- */
+    .cta-btn[hidden], .ar[hidden] { display: none; }
+    button.cta-btn { font-family: inherit; }
+    #arCanvas { position: absolute; top: 0; left: 0; width: 296px; height: 296px; }
+    .ar { position: fixed; inset: 0; z-index: 1000; background: #000; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+    .ar video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .ar-stage { position: absolute; inset: 0; overflow: hidden; }
+    .ar-plane { position: absolute; left: 50%; top: 50%; width: 320px; height: 320px; margin: -160px 0 0 -160px; transform-origin: 50% 50%; will-change: transform; }
+    .ar-halo { position: absolute; inset: -110px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb), .22), rgba(var(--rgb), 0) 68%); mix-blend-mode: screen; pointer-events: none; }
+    .ar-brand { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 26px; text-align: center; }
+    .ar-read { position: absolute; left: 0; right: 0; top: 100%; margin-top: 26px; text-align: center; color: rgba(var(--rgb), .85); text-shadow: 0 0 10px rgba(var(--rgb), .6); font-variant-numeric: tabular-nums; }
+    .ar-time { font-size: 20px; font-weight: 300; letter-spacing: .2em; }
+    .ar-date { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; margin-top: 8px; opacity: .7; }
+    .ar-top { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 12px); display: flex; justify-content: center; gap: 8px; padding: 0 12px; flex-wrap: wrap; }
+    .ar-bottom { position: absolute; left: 0; right: 0; margin: 0 auto; max-width: 340px; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; padding: 0 12px; }
+    .ar-bottom .btn { grid-column: span 2; min-width: 0; width: 100%; }
+    .ar .btn { background: rgba(0,0,0,.5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); min-width: 0; }
+    .ar-about { position: absolute; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 340px; bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); background: rgba(14,14,14,.92); border: 1px solid rgba(var(--rgb), .45); border-radius: 3px; padding: 16px 18px; color: var(--fluor); font-size: 13px; font-weight: 300; line-height: 1.55; display: none; }
+    .ar-about.show { display: block; }
+    .ar-hint { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 62px); text-align: center; font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: rgba(255,255,255,.8); text-shadow: 0 1px 6px #000; transition: opacity .6s; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -319,15 +340,45 @@
     </div>
   </div>
 
+  <button class="cta-btn" id="btnAR" type="button" hidden>View on my wall · AR</button>
+
   <a class="cta-btn" href="https://easylandx.github.io" target="_blank" rel="noopener">
     EasyLandX
   </a>
 </div>
 
 
+<div class="ar" id="ar" hidden>
+  <video id="arVideo" playsinline muted autoplay></video>
+  <div class="ar-stage" id="arStage">
+    <div class="ar-plane" id="arPlane">
+      <div class="ar-halo"></div>
+      <span class="brand ar-brand" id="arBrand">Braun</span>
+      <div class="bezel"><div class="face"><canvas id="arCanvas" width="740" height="740"></canvas></div></div>
+      <div class="ar-read"><div class="ar-time" id="arTime"></div><div class="ar-date" id="arDate"></div></div>
+    </div>
+  </div>
+  <div class="ar-hint" id="arHint">Drag to move · pinch to resize</div>
+  <div class="ar-top">
+    <button class="btn" id="arExit" type="button">Exit</button>
+    <button class="btn" id="arCenter" type="button">Center</button>
+    <button class="btn" id="arLock" type="button">Lock</button>
+    <button class="btn" id="arFade" type="button">Fade</button>
+  </div>
+  <div class="ar-about" id="arAbout"></div>
+  <div class="ar-bottom">
+    <button class="btn" data-for="btnBack" type="button">Back</button>
+    <button class="btn" data-for="btnSpeed" type="button">Speed</button>
+    <button class="btn" data-for="btnSlow" type="button">Slow</button>
+    <button class="btn" data-for="btnReset" type="button">Reset</button>
+    <button class="btn" data-for="btnAbout" type="button">About</button>
+    <button class="btn" data-for="btnColor" type="button">Color</button>
+  </div>
+</div>
+
 <script>
   const canvas = document.getElementById('clockCanvas');
-  const ctx = canvas.getContext('2d');
+  let ctx = canvas.getContext('2d');
   const W = canvas.width;
   const H = canvas.height;
   const cx = W / 2;
@@ -478,9 +529,6 @@
     lastFrame = now;
     virtualTime += dt * speed * direction;
 
-    ctx.clearRect(0, 0, W, H);
-    drawFace();
-
     const d = new Date(virtualTime);
     const hrs  = d.getHours() % 12;
     const mins = d.getMinutes();
@@ -501,14 +549,16 @@
     const minAngle  = (mins + secFrac / 60) * 6;
     const hourAngle = (hrs + mins / 60 + secFrac / 3600) * 30;
 
-    drawHand(hourAngle, R * 0.48, 5.5, FLUOR);
-    drawHand(minAngle, R * 0.72, 3.5, FLUOR);
-    drawSecondHand(secAngle);
+    paintClock(hourAngle, minAngle, secAngle);
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
-    ctx.fillStyle = FLUOR;
-    ctx.fill();
+    if (arActive) {            // second, sharper pass for the AR wall clock
+      const mainCtx = ctx;
+      ctx = arCtx;
+      arCtx.setTransform(AR_K, 0, 0, AR_K, 0, 0);
+      paintClock(hourAngle, minAngle, secAngle);
+      ctx = mainCtx;
+      arTick();
+    }
 
     requestAnimationFrame(draw);
   }
@@ -632,6 +682,178 @@
 
   btnAbout.addEventListener('click', showAbout);
   document.getElementById('aboutCard').addEventListener('click', hideAbout);
+
+  function paintClock(hourAngle, minAngle, secAngle) {
+    ctx.clearRect(0, 0, W, H);
+    drawFace();
+    drawHand(hourAngle, R * 0.48, 5.5, FLUOR);
+    drawHand(minAngle, R * 0.72, 3.5, FLUOR);
+    drawSecondHand(secAngle);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = FLUOR;
+    ctx.fill();
+  }
+
+  /* ---------- AR wall view (camera + motion sensors) ----------
+     The camera feed is the background; the clock is a flat panel pinned to a fixed
+     direction in space, so it stays on the wall as you move the phone. */
+  const AR_K = 740 / 296;
+  const AR_DIST = 1000;               // virtual distance in px-units
+  const D2R = Math.PI / 180;
+  const arEl = document.getElementById('ar');
+  const arVideo = document.getElementById('arVideo');
+  const arStage = document.getElementById('arStage');
+  const arPlane = document.getElementById('arPlane');
+  const arCtx = document.getElementById('arCanvas').getContext('2d');
+  const arAbout = document.getElementById('arAbout');
+  const btnAR = document.getElementById('btnAR');
+  let arActive = false, arStream = null, arWake = null, arF = 700;
+  let ori = null, needPlace = true, az = 0, pitch = 0, sc = 1, arLocked = false, fadeIdx = 0;
+  const FADES = [1, 0.7, 0.4];
+
+  // Only offer AR on touch devices with a camera
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.matchMedia('(pointer: coarse)').matches) {
+    btnAR.hidden = false;
+  }
+
+  function setF() {
+    arF = 0.866 * window.innerHeight;     // ~60° vertical field of view of the iPhone camera
+    arStage.style.perspective = arF + 'px';
+  }
+  window.addEventListener('resize', () => { if (arActive) setF(); });
+
+  window.addEventListener('deviceorientation', e => {
+    if (e.beta === null || e.beta === undefined) return;
+    ori = [e.alpha || 0, e.beta, e.gamma || 0];
+  });
+
+  // Rotation matrix device -> world (W3C order Z-X'-Y''), row-major
+  function rotM(o) {
+    const a = o[0] * D2R, b = o[1] * D2R, g = o[2] * D2R;
+    const ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b), cg = Math.cos(g), sg = Math.sin(g);
+    return [
+      ca*cg - sa*sb*sg, -cb*sa, ca*sg + cg*sa*sb,
+      cg*sa + ca*sb*sg,  ca*cb, sa*sg - ca*cg*sb,
+      -cb*sg,            sb,    cb*cg
+    ];
+  }
+
+  async function startAR() {
+    try {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        const r = await DeviceOrientationEvent.requestPermission();
+        if (r !== 'granted') { alert('Motion access is needed so the clock stays fixed on your wall. Allow it for this site and try again.'); return; }
+      }
+      arStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    } catch (err) {
+      alert('Could not start AR: ' + ((err && err.message) || err));
+      return;
+    }
+    arVideo.srcObject = arStream;
+    arVideo.play().catch(() => {});
+    arEl.hidden = false;
+    arActive = true;
+    needPlace = true;
+    setF();
+    const hint = document.getElementById('arHint');
+    hint.style.opacity = 1;
+    setTimeout(() => { hint.style.opacity = 0; }, 5000);
+    try { if (navigator.wakeLock) arWake = await navigator.wakeLock.request('screen'); } catch (e) {}
+  }
+
+  function stopAR() {
+    arActive = false;
+    if (arStream) arStream.getTracks().forEach(t => t.stop());
+    arStream = null;
+    arVideo.srcObject = null;
+    if (arWake) { arWake.release().catch(() => {}); arWake = null; }
+    arEl.hidden = true;
+  }
+
+  function arTick() {
+    if (!ori) return;
+    const R3 = rotM(ori);
+    if (needPlace) {                       // pin the clock where the camera is pointing now
+      const fx = -R3[2], fy = -R3[5], fz = -R3[8];
+      az = Math.atan2(fy, fx);
+      pitch = Math.max(-0.6, Math.min(0.6, Math.asin(Math.max(-1, Math.min(1, fz)))));
+      needPlace = false;
+    }
+    // text on the wall mirrors the main page
+    document.getElementById('arBrand').textContent = brandEl.textContent;
+    document.getElementById('arBrand').style.opacity = brandEl.classList.contains('fade') ? 0 : 1;
+    document.getElementById('arTime').textContent = digitalEl.textContent + (statusEl.textContent ? '  ' + statusEl.textContent : '');
+    document.getElementById('arDate').textContent = dateEl.textContent;
+    document.querySelectorAll('.ar-bottom .btn').forEach(b => {
+      const src = document.getElementById(b.dataset.for);
+      b.textContent = src.textContent;
+      b.classList.toggle('active', src.classList.contains('active'));
+    });
+    const showAbout = aboutEl.classList.contains('show');
+    arAbout.classList.toggle('show', showAbout);
+    if (showAbout) arAbout.textContent = aboutText.textContent;
+
+    // vertical wall panel facing the viewer, placed at (az, pitch)
+    const cp = Math.cos(pitch);
+    const C = [AR_DIST * cp * Math.cos(az), AR_DIST * cp * Math.sin(az), AR_DIST * Math.sin(pitch)];
+    const U = [Math.sin(az), -Math.cos(az), 0], V = [0, 0, 1], N = [-Math.cos(az), -Math.sin(az), 0];
+    const T = v => [
+      R3[0]*v[0] + R3[3]*v[1] + R3[6]*v[2],
+      R3[1]*v[0] + R3[4]*v[1] + R3[7]*v[2],
+      R3[2]*v[0] + R3[5]*v[1] + R3[8]*v[2]
+    ];
+    const u = T(U), v = T(V), n = T(N), c = T(C);
+    if (c[2] > -30) { arPlane.style.visibility = 'hidden'; return; }   // behind the camera
+    arPlane.style.visibility = 'visible';
+    const f = x => x.toFixed(5);
+    arPlane.style.transform = `matrix3d(${f(u[0]*sc)},${f(-u[1]*sc)},${f(u[2]*sc)},0,` +
+      `${f(-v[0]*sc)},${f(v[1]*sc)},${f(-v[2]*sc)},0,` +
+      `${f(n[0])},${f(-n[1])},${f(n[2])},0,` +
+      `${f(c[0])},${f(-c[1])},${f(c[2] + arF)},1)`;
+  }
+
+  // Gestures: drag moves the clock along the wall, pinch resizes it
+  let tp = null;
+  const pts = e => {
+    const t = e.touches;
+    return { n: t.length, x: t[0].clientX, y: t[0].clientY,
+             d: t.length > 1 ? Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) : 0 };
+  };
+  arEl.addEventListener('touchstart', e => {
+    if (e.target.closest('button')) return;
+    e.preventDefault();
+    tp = pts(e);
+  }, { passive: false });
+  arEl.addEventListener('touchmove', e => {
+    if (!tp || arLocked || e.target.closest('button')) return;
+    e.preventDefault();
+    const q = pts(e);
+    if (q.n === 1 && tp.n === 1) {
+      az -= (q.x - tp.x) / arF / Math.max(0.3, Math.cos(pitch));
+      pitch = Math.max(-1.0, Math.min(1.0, pitch - (q.y - tp.y) / arF));
+    } else if (q.n === 2 && tp.n === 2 && tp.d > 0) {
+      sc = Math.max(0.25, Math.min(5, sc * q.d / tp.d));
+    }
+    tp = q;
+  }, { passive: false });
+  arEl.addEventListener('touchend', e => { tp = e.touches.length ? pts(e) : null; });
+
+  btnAR.addEventListener('click', startAR);
+  document.getElementById('arExit').addEventListener('click', stopAR);
+  document.getElementById('arCenter').addEventListener('click', () => { needPlace = true; });
+  document.getElementById('arLock').addEventListener('click', e => {
+    arLocked = !arLocked;
+    e.currentTarget.classList.toggle('active', arLocked);
+    e.currentTarget.textContent = arLocked ? 'Unlock' : 'Lock';
+  });
+  document.getElementById('arFade').addEventListener('click', () => {
+    fadeIdx = (fadeIdx + 1) % FADES.length;
+    arPlane.style.opacity = FADES[fadeIdx];
+  });
+  document.querySelectorAll('.ar-bottom .btn').forEach(b =>
+    b.addEventListener('click', () => document.getElementById(b.dataset.for).click()));
+  arAbout.addEventListener('click', () => document.getElementById('aboutCard').click());
 
   updateStatus();
 </script>
