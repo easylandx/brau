@@ -481,10 +481,11 @@
     .cuckoo.ring { box-shadow: 0 0 26px rgba(var(--rgb), 0.55); border-color: var(--fluor); }
 
     #btnAwake { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
-    #btnWorld { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
+    #btnWorld, #btnFocus { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
     @media (max-width: 600px) {
-      #btnAwake { grid-column: 2 / span 2; }
-      #btnWorld { grid-column: 4 / span 2; }
+      #btnAwake { grid-column: 1 / span 2; }
+      #btnWorld { grid-column: 3 / span 2; }
+      #btnFocus { grid-column: 5 / span 2; }
     }
 
     .btn[hidden] { display: none; }
@@ -686,12 +687,72 @@
     }
     @media (max-width: 360px) { .speak-dd .wx-card { zoom: 0.85; } }
 
-    /* Weather mode button: right of the chime ("Cuckoo") button */
-    .chime-dd .wx-mode {
+    /* Weather + Help buttons: right of the chime ("Cuckoo") button */
+    .chime-dd .side-btns {
       position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
-      padding: 8px 9px;
+      display: flex; align-items: center; gap: 8px;
     }
+    .chime-dd .wx-mode { padding: 8px 9px; }
     .chime-dd .wx-mode::after { display: none; }
+    .help-btn { width: 30px; padding: 8px 0 !important; text-align: center; letter-spacing: 0 !important; font-size: 12px !important; }
+    .help-btn::after { display: none; }
+    /* phones: no room beside the Cuckoo button, so Weather becomes a cloud icon and the two stack */
+    @media (max-width: 480px) {
+      .chime-dd .side-btns { flex-direction: column; gap: 6px; margin-top: 8px; }
+      .chime-dd .wx-mode, .help-btn { width: 30px; height: 30px; padding: 0 !important; font-size: 0 !important; }
+      .help-btn { font-size: 13px !important; line-height: 28px; }
+      .chime-dd .wx-mode::before {
+        content: ""; display: block; width: 16px; height: 16px; margin: 0 auto; background: var(--fluor);
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12.5h7a3 3 0 0 0 .4-6A4 4 0 0 0 4.3 7.4 2.6 2.6 0 0 0 4.5 12.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12.5h7a3 3 0 0 0 .4-6A4 4 0 0 0 4.3 7.4 2.6 2.6 0 0 0 4.5 12.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+      }
+      .chime-dd .wx-mode { display: flex; align-items: center; }
+    }
+
+    /* ---------- Focus mode: only the clock and the Braun logo ---------- */
+    body.focus .cuckoo-wrap, body.focus .readout-group, body.focus .models, body.focus .controls,
+    body.focus .about, body.focus .cta-btn, body.focus .lang, body.focus .world { display: none !important; }
+    body.focus[data-model="weather"] .readout-group { display: flex !important; }   /* the weather page needs its time line */
+    body.focus .brand, body.focus .stage { cursor: pointer; }
+    .focus-exit { display: none; }
+    body.focus .focus-exit {
+      display: block; position: fixed; left: 50%; transform: translateX(-50%); z-index: 50;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+      min-width: 0; opacity: 0.35; background: rgba(10, 10, 10, 0.6);
+    }
+    body.focus .focus-exit:hover, body.focus .focus-exit:focus-visible { opacity: 1; }
+
+    /* ---------- Help overlay ---------- */
+    .help {
+      position: fixed; inset: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: center;
+      padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px calc(env(safe-area-inset-bottom, 0px) + 20px);
+      background: rgba(0, 0, 0, 0.72);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    }
+    .help[hidden] { display: none; }
+    .help-card {
+      width: 100%; max-width: 420px; max-height: 100%;
+      display: flex; flex-direction: column;
+      background: #0e0e0e; border: 1px solid rgba(var(--rgb), 0.45); border-radius: 3px;
+      box-shadow: 0 0 30px rgba(var(--rgb), 0.14);
+    }
+    .help-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px 12px 20px; border-bottom: 1px solid rgba(var(--rgb), 0.18);
+      font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(var(--rgb), 0.6);
+    }
+    .help-x {
+      background: transparent; border: 1px solid rgba(var(--rgb), 0.35); border-radius: 2px; color: var(--fluor);
+      width: 28px; height: 28px; font-size: 16px; line-height: 1; cursor: pointer; letter-spacing: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .help-x:hover, .help-x:focus-visible { background: rgba(var(--rgb), 0.12); outline: none; border-color: var(--fluor); }
+    .help-body { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 6px 20px 18px; }
+    .help-i { padding: 11px 0; border-bottom: 1px solid rgba(var(--rgb), 0.1); }
+    .help-i:last-child { border-bottom: 0; }
+    .help-h { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fluor); margin-bottom: 4px; }
+    .help-t { font-size: 13px; font-weight: 300; line-height: 1.5; color: rgba(var(--rgb), 0.78); }
 
     /* ---------- World city day/night dot ---------- */
     .wc { position: relative; }
@@ -813,7 +874,10 @@
       </div>
     </div>
     <div class="chime-dd" id="chimeDd">
-      <button class="btn speak-btn wx-mode" id="btnWx" type="button" aria-pressed="false">Weather</button>
+      <div class="side-btns">
+        <button class="btn speak-btn wx-mode" id="btnWx" type="button" aria-pressed="false">Weather</button>
+        <button class="btn speak-btn help-btn" id="btnHelp" type="button" aria-haspopup="dialog" aria-label="Help">?</button>
+      </div>
       <button class="btn speak-btn chime-btn active" id="cuckooSound" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Chime sound and volume">Cuckoo</button>
       <div class="speak-menu chime-menu" id="chimeMenu" role="menu" hidden>
         <button class="speak-opt" type="button" role="menuitemradio" data-chime="cuckoo">Cuckoo</button>
@@ -879,6 +943,7 @@
     <button class="btn" id="btnColor" type="button">Color</button>
     <button class="btn" id="btnAwake" type="button" aria-pressed="false">Auto sleep</button>
     <button class="btn" id="btnWorld" type="button" aria-pressed="true">World on</button>
+    <button class="btn" id="btnFocus" type="button" aria-pressed="false">Focus</button>
     <button class="btn active" id="btnTick" type="button" hidden>Tick on</button>
   </div>
 
@@ -901,6 +966,15 @@
   </a>
 </div>
 
+
+<button class="btn focus-exit" id="focusExit" type="button">Show</button>
+
+<div class="help" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="help-card">
+    <div class="help-head"><span id="helpTitle"></span><button class="help-x" id="helpClose" type="button" aria-label="Close">&times;</button></div>
+    <div class="help-body" id="helpBody"></div>
+  </div>
+</div>
 
 <div class="ar" id="ar" hidden>
   <video id="arVideo" playsinline muted autoplay></video>
@@ -1001,7 +1075,7 @@
       tickOn: 'Tick on', tickOff: 'Tick off',
       back: 'Back', forward: 'Forward', speed: 'Speed', slow: 'Slow', reset: 'Reset', about: 'About', color: 'Color',
       awakeOn: 'Always on', awakeOff: 'Auto sleep', notAllowed: 'Not allowed',
-      worldOn: 'World on', worldOff: 'World off',
+      worldOn: 'World on', worldOff: 'World off', focus: 'Focus', focusShow: 'Show',
       ch_cuckoo: 'Cuckoo', ch_westminster: 'Westminster', ch_bell: 'Soft bell', ch_tick: 'Mechanical tick',
       chOff: 'Chime off', volume: 'Volume',
       speakOff: 'Speak off', speakN: n => 'Speak ' + n + 'm',
@@ -1024,7 +1098,7 @@
       tickOn: 'Tic on', tickOff: 'Tic off',
       back: 'Atrás', forward: 'Adelante', speed: 'Rápido', slow: 'Lento', reset: 'Reiniciar', about: 'Acerca', color: 'Color',
       awakeOn: 'Siempre on', awakeOff: 'Reposo auto', notAllowed: 'No permitido',
-      worldOn: 'Mundo on', worldOff: 'Mundo off',
+      worldOn: 'Mundo on', worldOff: 'Mundo off', focus: 'Foco', focusShow: 'Mostrar',
       ch_cuckoo: 'Cuco', ch_westminster: 'Westminster', ch_bell: 'Campana suave', ch_tick: 'Tic mecánico',
       chOff: 'Sonido off', volume: 'Volumen',
       speakOff: 'Voz off', speakN: n => 'Voz ' + n + 'm',
@@ -1040,6 +1114,40 @@
       wd: ['DO', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA'],
       cities: ['Madrid', 'Londres', 'Nueva York', 'Buenos Aires', 'Tokio', 'Sídney']
     }
+  };
+  I18N.en.help = {
+    title: 'Quick guide', btn: 'Help', close: 'Close',
+    items: [
+      ['Clock styles', 'Tap Analog, Split-Flap, Word, Digital, Pendulum or Sun & Moon to change how the time looks.'],
+      ['World cities', 'Tap any city on the sides to see its time and weather. Tap it again to come back. “World” hides or shows them.'],
+      ['Focus', 'Hides everything except the clock and the Braun logo. Tap the clock, the logo or “Show” to bring it all back.'],
+      ['Time travel', 'Back runs time in reverse, Speed doubles it, Slow halves it and Reset returns to now.'],
+      ['Color & About', 'Color cycles the neon glow. About shows a short saying about time.'],
+      ['Weather', 'Temperature and sky at your place, or at the city you picked. Weather opens the full details: wind, rain, sun, moon and air quality.'],
+      ['Cuckoo', 'Choose a chime and its volume, or tap the little house to hear it. It sounds every half hour.'],
+      ['Speak', 'The clock says the time out loud every 1 to 60 minutes.'],
+      ['Auto sleep', 'Switch to “Always on” to keep the screen awake so the clock stays visible.'],
+      ['Pendulum tick', 'In Pendulum mode you can turn the ticking sound on or off.'],
+      ['AR wall view', 'Where available, “View on my wall” places the clock in your camera view. Drag to move it, pinch to resize.'],
+      ['Language', 'The EN / ES flags at the top right switch the language.']
+    ]
+  };
+  I18N.es.help = {
+    title: 'Guía rápida', btn: 'Ayuda', close: 'Cerrar',
+    items: [
+      ['Estilos de reloj', 'Toca Analógico, Panel, Palabras, Digital, Péndulo o Sol y Luna para cambiar el aspecto de la hora.'],
+      ['Ciudades del mundo', 'Toca una ciudad de los lados para ver su hora y su tiempo. Tócala de nuevo para volver. “Mundo” las oculta o muestra.'],
+      ['Foco', 'Oculta todo excepto el reloj y el logo de Braun. Toca el reloj, el logo o “Mostrar” para recuperarlo todo.'],
+      ['Viaje en el tiempo', 'Atrás hace correr el tiempo al revés, Rápido lo dobla, Lento lo reduce a la mitad y Reiniciar vuelve al presente.'],
+      ['Color y Acerca', 'Color cambia el brillo de neón. Acerca muestra una frase corta sobre el tiempo.'],
+      ['Tiempo', 'Temperatura y cielo de tu ubicación o de la ciudad elegida. Tiempo abre todos los detalles: viento, lluvia, sol, luna y calidad del aire.'],
+      ['Cuco', 'Elige una campanada y su volumen, o toca la casita para oírla. Suena cada media hora.'],
+      ['Voz', 'El reloj dice la hora en voz alta cada 1 a 60 minutos.'],
+      ['Reposo auto', 'Cambia a “Siempre on” para mantener la pantalla encendida y ver siempre el reloj.'],
+      ['Tic del péndulo', 'En modo Péndulo puedes activar o desactivar el sonido del tic.'],
+      ['Vista AR en la pared', 'Si tu dispositivo lo permite, “Ver en mi pared” coloca el reloj en la vista de la cámara. Arrastra para moverlo y pellizca para ajustarlo.'],
+      ['Idioma', 'Las banderas EN / ES de arriba a la derecha cambian el idioma.']
+    ]
   };
   let lang = 'en';
   try { const sv = localStorage.getItem('braunLang'); if (sv === 'es' || sv === 'en') lang = sv; } catch (e) {}
@@ -3138,11 +3246,54 @@
 
   /* ---------- Apply language to every label ---------- */
   const TXT_IDS = {
-    btnWx: 'm_weather', btnSpeed: 'speed', btnSlow: 'slow', btnReset: 'reset', btnAbout: 'about', btnColor: 'color', btnAR: 'viewAR',
+    btnWx: 'm_weather', btnFocus: 'focus', focusExit: 'focusShow', btnSpeed: 'speed', btnSlow: 'slow', btnReset: 'reset', btnAbout: 'about', btnColor: 'color', btnAR: 'viewAR',
     arExit: 'exit', arModel: 'model', arShot: 'photo', arCenter: 'center', arFade: 'fade', arHint: 'hint'
   };
 
+  /* ---------- Focus mode ---------- */
+  function setFocus(on) {
+    document.body.classList.toggle('focus', on);
+    const b = document.getElementById('btnFocus');
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  document.getElementById('btnFocus').addEventListener('click', () => setFocus(true));
+  document.getElementById('focusExit').addEventListener('click', () => setFocus(false));
+  document.querySelector('.stage').addEventListener('click', () => { if (document.body.classList.contains('focus')) setFocus(false); });
+  document.getElementById('brand').addEventListener('click', () => { if (document.body.classList.contains('focus')) setFocus(false); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.body.classList.contains('focus') && document.getElementById('help').hidden) setFocus(false);
+  });
+
+  /* ---------- Help overlay ---------- */
+  function renderHelp() {
+    const H = I18N[lang].help;
+    const body = document.getElementById('helpBody');
+    if (!body) return;
+    document.getElementById('helpTitle').textContent = H.title;
+    document.getElementById('helpClose').setAttribute('aria-label', H.close);
+    document.getElementById('btnHelp').setAttribute('aria-label', H.btn);
+    body.innerHTML = '';
+    H.items.forEach(it => {
+      const row = document.createElement('div'); row.className = 'help-i';
+      const h = document.createElement('div'); h.className = 'help-h'; h.textContent = it[0];
+      const p = document.createElement('div'); p.className = 'help-t'; p.textContent = it[1];
+      row.appendChild(h); row.appendChild(p); body.appendChild(row);
+    });
+  }
+  function openHelp(on) {
+    const el = document.getElementById('help');
+    el.hidden = !on;
+    if (on) { renderHelp(); document.getElementById('helpBody').scrollTop = 0; document.getElementById('helpClose').focus({ preventScroll: true }); }
+    else document.getElementById('btnHelp').focus({ preventScroll: true });
+  }
+  document.getElementById('btnHelp').addEventListener('click', e => { e.stopPropagation(); openHelp(true); });
+  document.getElementById('helpClose').addEventListener('click', () => openHelp(false));
+  document.getElementById('help').addEventListener('click', e => { if (e.target.id === 'help') openHelp(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('help').hidden) openHelp(false); });
+
   function applyLang() {
+    renderHelp();
     const L = I18N[lang];
     document.documentElement.lang = lang;
     DAYS = L.days;
