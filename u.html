@@ -2344,7 +2344,7 @@
 
   // Soft wooden click; "tick" and "tock" differ slightly in pitch
   function playTick(side) {
-    if (!audioCtx || audioCtx.state !== 'running') return;
+    if (bugleBusy || !audioCtx || audioCtx.state !== 'running') return;
     const t0 = audioCtx.currentTime + 0.005;
     const f = side > 0 ? 1500 : 1050;
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
@@ -2577,7 +2577,7 @@
   }
 
   function runCuckoo(count) {
-    if (!cuckooOn || cuckooBusy) return;
+    if (!cuckooOn || cuckooBusy || bugleBusy) return;
     cuckooBusy = true;
     CALL_GAP = speed > 8 ? 700 : 1000;                    // quicker calls when time is racing
     cuckooEl.classList.add('ajar');                       // doors open
@@ -2643,7 +2643,7 @@
 
   function runChime(h, half) {
     if (chimeType === 'cuckoo') { runCuckoo(half ? 1 : (h % 12 || 12)); return; }
-    if (!cuckooOn || cuckooBusy) return;
+    if (!cuckooOn || cuckooBusy || bugleBusy) return;
     cuckooBusy = true;
     const n = half ? 1 : (h % 12 || 12);
     const fast = speed > 8;                       // quicker when time is racing
@@ -2680,7 +2680,7 @@
 
   // One short sample so the person hears what they just picked or the new volume
   function previewSound() {
-    if (!cuckooOn || !audioCtx || audioCtx.state !== 'running') return;
+    if (!cuckooOn || bugleBusy || !audioCtx || audioCtx.state !== 'running') return;
     const t0 = audioCtx.currentTime + 0.02;
     if (chimeType === 'cuckoo') playCuckooCall();
     else if (chimeType === 'tick') mechClick(t0, 1250);
@@ -2787,7 +2787,7 @@
   }
 
   function say(text) {
-    if (!hasVoice) return;
+    if (!hasVoice || bugleBusy) return;
     try {
       if (speechSynthesis.speaking) speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
@@ -2890,22 +2890,28 @@
     lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
     flt.type = 'lowpass'; flt.frequency.value = 2300; flt.Q.value = 1.2;
     g2.gain.value = 0.35;
-    const hold = Math.max(0.06, dur - 0.07);
+    const att = Math.min(0.045, dur * 0.3);
+    const hold = Math.max(att + 0.005, dur - Math.min(0.07, dur * 0.3));
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.28, t0 + 0.045);
+    g.gain.exponentialRampToValueAtTime(0.28, t0 + att);
     g.gain.setValueAtTime(0.24, t0 + hold);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g); g.connect(master);
     [o, o2, lfo].forEach(x => { x.start(t0); x.stop(t0 + dur + 0.05); });
   }
 
-  function playBugle(name) {
+  // rate > 1 plays the call faster (used when time is racing)
+  function playBugle(name, rate) {
     const c = BUGLE[name];
+    rate = rate || 1;
     if (!c || !audioCtx || audioCtx.state !== 'running') return;
+    // The bugle has priority: silence the cuckoo / chimes and any spoken time first
+    cancelCuckoo();
+    if (hasVoice) { try { speechSynthesis.cancel(); } catch (e) {} }
     let at = audioCtx.currentTime + 0.05;
     c.s.split(' ').forEach(tok => {
-      const p = tok.split(':'), dur = parseFloat(p[1]) * c.beat;
-      if (p[0] !== 'R') bugleNote(at, BF[p[0]], Math.max(0.1, dur * 0.94));
+      const p = tok.split(':'), dur = parseFloat(p[1]) * c.beat / rate;
+      if (p[0] !== 'R') bugleNote(at, BF[p[0]], Math.max(0.05, dur * 0.94));
       at += dur;
     });
     bugleBusy = true;
@@ -2913,26 +2919,47 @@
     bugleTimer = setTimeout(() => { bugleBusy = false; }, (at - audioCtx.currentTime) * 1000 + 300);
   }
 
-  // Never talk over the cuckoo / chime or another call
-  function bugleWhenFree(name, tries) {
-    if (!bugleOn) return;
-    if ((cuckooBusy || bugleBusy) && (tries || 0) < 80) { setTimeout(() => bugleWhenFree(name, (tries || 0) + 1), 700); return; }
-    playBugle(name);
+  // Calls wait in a short queue and play one after another (never over each other).
+  // At normal speed they also wait for the cuckoo; when time is racing they play faster and don't wait.
+  let bugleQ = [], bugleDraining = false;
+  function bugleEnqueue(name) {
+    bugleQ.push(name);
+    if (bugleQ.length > 4) bugleQ.shift();      // at top speed keep only the most recent ones
+    bugleDrain();
+  }
+  function bugleDrain() {
+    if (!bugleOn || !bugleQ.length || bugleDraining) return;
+    bugleDraining = true;
+    const go = tries => {
+      if (!bugleOn) { bugleQ = []; bugleDraining = false; return; }
+      const fast = speed > 8;
+      if (bugleBusy && tries < 300) { setTimeout(() => go(tries + 1), fast ? 100 : 700); return; }
+      const name = bugleQ.shift();
+      if (name) playBugle(name, 1);                 // always normal tempo, whatever the clock speed
+      bugleDraining = false;
+      if (bugleQ.length) bugleDrain();
+    };
+    go(0);
   }
 
+  // Looks at every minute the clock crossed since the last frame, so no call is missed at any speed
   function checkBugle(d, dt) {
-    const tm = d.getHours() * 60 + d.getMinutes();
-    const key = (d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate()) * 2000 + tm;
-    const cur = { key, t: tm };
+    const am = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()) / 60000);
     const prev = lastBug;
-    lastBug = cur;
+    lastBug = am;
     const step = Math.abs(virtualTime - lastBugVT);
     const jumped = lastBugVT !== null && step > dt * speed + 1500;
     lastBugVT = virtualTime;
-    if (!bugleOn || !prev || prev.key === key || jumped || dt > 1500 || speed > 8) return;
-    const hit = direction > 0 ? cur : prev;      // forward: the new minute starts here; reverse: the old one did
-    const name = BUGLE_AT[hit.t];
-    if (name) bugleWhenFree(name);
+    if (!bugleOn || prev === null || prev === am || jumped || dt > 1500) return;
+    const lo = Math.min(prev, am), hi = Math.max(prev, am);
+    if (hi - lo > 3000) return;
+    const hits = [];
+    for (let m = lo + 1; m <= hi; m++) {           // forward: minutes entered; reverse: minutes left
+      const name = BUGLE_AT[((m % 1440) + 1440) % 1440];
+      if (name) hits.push(name);
+    }
+    if (direction < 0) hits.reverse();
+    hits.forEach(bugleEnqueue);
   }
 
   function syncBugleBtn() {
@@ -2944,7 +2971,7 @@
     unlockAudio();
     bugleOn = !bugleOn;
     lastBug = null;
-    if (!bugleOn && bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
+    if (!bugleOn) { bugleQ = []; if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); } }
     try { localStorage.setItem('braunBugle', bugleOn ? 'on' : 'off'); } catch (e) {}
     syncBugleBtn();
     if (bugleOn) setTimeout(() => playBugle('work'), 150);      // short sample so you hear it is armed
