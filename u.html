@@ -710,9 +710,8 @@
     }
 
     /* ---------- Focus mode: only the clock and the Braun logo ---------- */
-    body.focus .cuckoo-wrap, body.focus .readout-group, body.focus .models, body.focus .controls,
+    body.focus .cuckoo-wrap, body.focus .models, body.focus .controls,
     body.focus .about, body.focus .cta-btn, body.focus .lang, body.focus .world { display: none !important; }
-    body.focus[data-model="weather"] .readout-group { display: flex !important; }   /* the weather page needs its time line */
     body.focus .brand, body.focus .stage { cursor: pointer; }
     .focus-exit { display: none; }
     body.focus .focus-exit {
@@ -1120,7 +1119,7 @@
     items: [
       ['Clock styles', 'Tap Analog, Split-Flap, Word, Digital, Pendulum or Sun & Moon to change how the time looks.'],
       ['World cities', 'Tap any city on the sides to see its time and weather. Tap it again to come back. “World” hides or shows them.'],
-      ['Focus', 'Hides everything except the clock and the Braun logo. Tap the clock, the logo or “Show” to bring it all back.'],
+      ['Focus', 'Hides everything except the clock, its time and date, and the Braun logo. Tap the clock, the logo or “Show” to bring it all back.'],
       ['Time travel', 'Back runs time in reverse, Speed doubles it, Slow halves it and Reset returns to now.'],
       ['Color & About', 'Color cycles the neon glow. About shows a short saying about time.'],
       ['Weather', 'Temperature and sky at your place, or at the city you picked. Weather opens the full details: wind, rain, sun, moon and air quality.'],
@@ -1137,7 +1136,7 @@
     items: [
       ['Estilos de reloj', 'Toca Analógico, Panel, Palabras, Digital, Péndulo o Sol y Luna para cambiar el aspecto de la hora.'],
       ['Ciudades del mundo', 'Toca una ciudad de los lados para ver su hora y su tiempo. Tócala de nuevo para volver. “Mundo” las oculta o muestra.'],
-      ['Foco', 'Oculta todo excepto el reloj y el logo de Braun. Toca el reloj, el logo o “Mostrar” para recuperarlo todo.'],
+      ['Foco', 'Oculta todo excepto el reloj, su hora y fecha, y el logo de Braun. Toca el reloj, el logo o “Mostrar” para recuperarlo todo.'],
       ['Viaje en el tiempo', 'Atrás hace correr el tiempo al revés, Rápido lo dobla, Lento lo reduce a la mitad y Reiniciar vuelve al presente.'],
       ['Color y Acerca', 'Color cambia el brillo de neón. Acerca muestra una frase corta sobre el tiempo.'],
       ['Tiempo', 'Temperatura y cielo de tu ubicación o de la ciudad elegida. Tiempo abre todos los detalles: viento, lluvia, sol, luna y calidad del aire.'],
