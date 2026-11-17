@@ -552,6 +552,10 @@
     }
     .world[hidden] { display: none; }
     .wc {
+      cursor: pointer;
+      pointer-events: auto;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
       min-width: 0;
       padding: 2px 0 2px 12px;
       border-left: 1px solid rgba(var(--rgb), 0.25);
@@ -691,6 +695,16 @@
 
     /* ---------- World city day/night dot ---------- */
     .wc { position: relative; }
+    /* bigger tap area around each city */
+    .wc::after { content: ""; position: absolute; inset: -8px -8px; }
+    .wc-city, .wc-time { transition: color 0.2s, text-shadow 0.2s; }
+    .wc:hover .wc-city, .wc:focus-visible .wc-city { color: var(--fluor); }
+    .wc:focus-visible { outline: 1px solid rgba(var(--rgb), 0.6); outline-offset: 4px; }
+    .wc.sel { border-color: var(--fluor) !important; }
+    .wc.sel .wc-city { color: var(--fluor); }
+    .wc.sel .wc-city, .wc.sel .wc-city::before { text-decoration: underline; text-underline-offset: 3px; }
+    .wc.sel .wc-time { text-shadow: 0 0 10px rgba(var(--rgb), 0.65); }
+    .wx-place { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(var(--rgb), 0.5); margin-bottom: 10px; }
     .wc-dot {
       position: absolute;
       top: 6px;
@@ -818,6 +832,7 @@
   <span class="brand" id="brand">Braun</span>
 
   <div class="wxpage" id="wxPage">
+    <div class="wx-place" id="wxpPlace"></div>
     <div class="wxp-head">
       <span class="wx-ic" id="wxpIc"></span>
       <span class="wx-temp" id="wxpTemp">--</span>
@@ -1129,6 +1144,22 @@
   let lastDateKey = '';
   const pad = n => String(n).padStart(2, '0');
 
+  // Time of the selected world city (tzSel >= 0) as a Date whose local getters read that city's wall clock.
+  // With no city selected it is simply the device's own time.
+  let tzSel = -1, tzFmt = null;
+  function wallOf(ms) {
+    if (tzSel < 0 || !tzFmt) return new Date(ms);
+    const p = {};
+    tzFmt.formatToParts(ms).forEach(x => { p[x.type] = x.value; });
+    return new Date(+p.year, +p.month - 1, +p.day, (+p.hour) % 24, +p.minute, +p.second, ((ms % 1000) + 1000) % 1000);
+  }
+  // Offset of the shown place from UTC at a given instant (ms)
+  function offsetAt(ms) {
+    if (tzSel < 0) return -new Date(ms).getTimezoneOffset() * 60000;
+    const w = wallOf(ms);
+    return Date.UTC(w.getFullYear(), w.getMonth(), w.getDate(), w.getHours(), w.getMinutes(), w.getSeconds()) - Math.floor(ms / 1000) * 1000;
+  }
+
   function updateStatus() {
     const parts = [];
     if (direction < 0) parts.push('◀');
@@ -1142,12 +1173,14 @@
     lastFrame = now;
     virtualTime += dt * speed * direction;
 
-    const d = new Date(virtualTime);
+    const real = new Date(virtualTime);
+    const d = wallOf(virtualTime);          // this device's time, or the selected city's
     curDate = d;
+    curReal = real;
     frameNow = now;
     checkCuckoo(d, dt);
     checkSpeak(d, dt);
-    updateWorld(d);
+    updateWorld(real, d);
     checkTick(dt);
     wxTick();
     if (model === 'flip') updateFlaps(d);
@@ -1162,7 +1195,8 @@
     const dateKey = d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate();
     if (dateKey !== lastDateKey) {
       lastDateKey = dateKey;
-      dateEl.textContent = `${DAYS[d.getDay()]} ${pad(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+      dateEl.textContent = (tzSel >= 0 ? I18N[lang].cities[tzSel] + ' \u00b7 ' : '') +
+        `${DAYS[d.getDay()]} ${pad(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
     }
 
     const secFrac   = secs + ms / 1000;
@@ -1239,6 +1273,7 @@
     colorIndex = 0;
     virtualTime = Date.now();
     lastFrame = performance.now();
+    if (tzSel >= 0) selectCity(tzSel);      // back to this device's time and weather
     applyColor();
     btnBack.classList.remove('active');
     btnBack.textContent = t('back');
@@ -1339,7 +1374,8 @@
   /* ---------- Clock models: analog (default), split-flap, digital ---------- */
   const MODELS = ['analog', 'flip', 'word', 'digital', 'pendulum', 'sun', 'weather'];
   let model = 'analog';
-  let curDate = new Date();
+  let curDate = new Date();   // wall-clock of the shown place (its getters give that place's time)
+  let curReal = new Date();   // the true instant, for sun / moon maths
   let frameNow = 0;
   let flaps = null;
   const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif";
@@ -1680,6 +1716,7 @@
     const sl = JSON.parse(localStorage.getItem('braunLoc'));
     if (sl && isFinite(sl.lat) && isFinite(sl.lon)) loc = { lat: sl.lat, lon: sl.lon, gps: true };
   } catch (e) {}
+  let homeLoc = loc;                 // the device's own position; `loc` is swapped while a world city is selected
   let locAsked = false;
 
   // Asks once per visit, only after the person taps the Sun & Moon model
@@ -1687,9 +1724,9 @@
     if (locAsked || !navigator.geolocation) return;
     locAsked = true;
     navigator.geolocation.getCurrentPosition(p => {
-      loc = { lat: p.coords.latitude, lon: p.coords.longitude, gps: true };
-      wx.key = '';
-      try { localStorage.setItem('braunLoc', JSON.stringify({ lat: loc.lat, lon: loc.lon })); } catch (e) {}
+      homeLoc = { lat: p.coords.latitude, lon: p.coords.longitude, gps: true };
+      if (tzSel < 0) { loc = homeLoc; wx.key = ''; }
+      try { localStorage.setItem('braunLoc', JSON.stringify({ lat: homeLoc.lat, lon: homeLoc.lon })); } catch (e) {}
     }, () => {}, { timeout: 8000, maximumAge: 3600000 });
   }
 
@@ -1711,7 +1748,7 @@
   // Sunrise and sunset for the date of d, as minutes since midnight in the device's own time
   function sunTimes(d, lat, lon, h0) {
     if (h0 === undefined) h0 = -0.833;
-    const noon = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime();
+    const noon = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12);
     const n = Math.round(noon / 864e5 + 2440587.5 - 2451545.0 + 0.0008);
     const Js = n - lon / 360;
     const M = ((357.5291 + 0.98560028 * Js) % 360) * RAD;
@@ -1724,7 +1761,7 @@
     if (cw < -1) return { polar: 'day', len: 1440 };
     if (cw > 1) return { polar: 'night', len: 0 };
     const w = Math.acos(cw) / RAD;
-    const toMin = J => { const x = new Date((J - 2440587.5) * 864e5); return x.getHours() * 60 + x.getMinutes() + x.getSeconds() / 60; };
+    const toMin = J => { const x = wallOf((J - 2440587.5) * 864e5); return x.getHours() * 60 + x.getMinutes() + x.getSeconds() / 60; };
     return { rise: toMin(Jt - w / 360), set: toMin(Jt + w / 360), len: 8 * w };
   }
 
@@ -1845,7 +1882,7 @@
     });
 
     // current time: sun by day, hollow dot by night
-    const na = A(nowMin), alt = sunAlt(d, loc.lat, loc.lon);
+    const na = A(nowMin), alt = sunAlt(curReal, loc.lat, loc.lon);
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(na) * 50, cy + Math.sin(na) * 50);
     ctx.lineTo(cx + Math.cos(na) * (rr - 30), cy + Math.sin(na) * (rr - 30));
@@ -1887,7 +1924,7 @@
     ctx.restore();
 
     // centre: place, moon, phase, sunrise/sunset, day length
-    const p = moonPhase(d), k = (1 - Math.cos(2 * Math.PI * p)) / 2;
+    const p = moonPhase(curReal), k = (1 - Math.cos(2 * Math.PI * p)) / 2;
     const waning = p > 0.5, south = loc.lat < 0;
     drawMoon(cx, cy - 22, 26, p, waning !== south);
 
@@ -1897,7 +1934,7 @@
     ctx.textBaseline = 'middle';
     ctx.font = `400 8.5px ${SANS}`;
     ctx.fillStyle = rgba(0.45);
-    ctx.fillText((loc.gps ? L.yourLoc : L.locDefault).toUpperCase() + ' · ' + coords, cx, cy - 62);
+    ctx.fillText((tzSel >= 0 ? L.cities[tzSel] : loc.gps ? L.yourLoc : L.locDefault).toUpperCase() + ' · ' + coords, cx, cy - 62);
 
     ctx.font = `300 9.5px ${SANS}`;
     ctx.fillStyle = rgba(0.7);
@@ -1959,7 +1996,8 @@
   function moonTimes(d) {
     const key = (d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate()) + '|' + loc.lat.toFixed(2) + '|' + loc.lon.toFixed(2);
     if (moonCache.key === key) return moonCache.v;
-    const t0 = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const t0 = tzSel < 0 ? new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
+                         : Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - offsetAt(curReal.getTime());
     let rise = null, set = null, prev = moonAlt(t0, loc.lat, loc.lon) - 0.125;
     for (let i = 1; i <= 288; i++) {
       const a = moonAlt(t0 + i * 300000, loc.lat, loc.lon) - 0.125;
@@ -1984,8 +2022,8 @@
 
   function fetchWx() {
     const key = loc.lat.toFixed(2) + ',' + loc.lon.toFixed(2);
-    if (wx.busy || (wx.key === key && Date.now() < wx.next)) return;
-    wx.busy = true;
+    if (wx.busy === key || (wx.key === key && Date.now() < wx.next)) return;
+    wx.busy = key;
     const q = 'latitude=' + loc.lat.toFixed(3) + '&longitude=' + loc.lon.toFixed(3);
     const u1 = 'https://api.open-meteo.com/v1/forecast?' + q +
       '&current=temperature_2m,apparent_temperature,relative_humidity_2m,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_gusts_10m,wind_direction_10m,precipitation,uv_index' +
@@ -1995,9 +2033,11 @@
       fetch(u1).then(r => { if (!r.ok) throw 0; return r.json(); }),
       fetch(u2).then(r => r.ok ? r.json() : null).catch(() => null)
     ]).then(([a, b]) => {
+      if (wx.busy !== key) return;            // another city was picked meanwhile
       wx.data = a; wx.aq = b; wx.key = key; wx.err = false; wx.busy = false; wx.next = Date.now() + 900000;
       renderWx();
     }).catch(() => {
+      if (wx.busy !== key) return;
       wx.err = true; wx.busy = false; wx.key = key; wx.next = Date.now() + 60000;
       renderWx();
     });
@@ -2014,7 +2054,7 @@
   function renderWx() {
     const el = document.getElementById('wx');
     if (!el) return;
-    const T = WXT[lang], d = curDate;
+    const T = WXT[lang], d = curDate, dr = curReal;
     const w = wx.data && wx.data.current, dl = wx.data && wx.data.daily, aq = wx.aq && wx.aq.current;
     const D = '—';
     const ICON = {
@@ -2028,7 +2068,7 @@
     const num = (v, dig, u) => (v === null || v === undefined || isNaN(v)) ? D : (+v).toFixed(dig) + u;
     const tm = (o, k) => (!o || o.polar || o[k] === null || o[k] === undefined) ? D : fmtMin(o[k]);
 
-    const sunUp = sunAlt(d, loc.lat, loc.lon) > -0.833;
+    const sunUp = sunAlt(dr, loc.lat, loc.lon) > -0.833;
     let sky = sunUp ? 'sun' : 'moon';
     if (w && w.precipitation > 0.05) sky = 'rain';
     else if (w && w.cloud_cover >= 70) sky = 'cloud';
@@ -2044,13 +2084,14 @@
     if (model !== 'weather') return;
 
     // weather model: everything listed on its own line
+    document.getElementById('wxpPlace').textContent = tzSel >= 0 ? I18N[lang].cities[tzSel] : (loc.gps ? I18N[lang].yourLoc : I18N[lang].locDefault);
     document.getElementById('wxpIc').innerHTML = ic(sky);
     document.getElementById('wxpTemp').textContent = temp;
     document.getElementById('wxpCl').innerHTML = w ? cloud : '<span class="wx-sub">' + status + '</span>';
 
     const st = sunInfo(d), tw = twilight(d), mt = moonTimes(d);
-    const p = moonPhase(d), k = (1 - Math.cos(2 * Math.PI * p)) / 2;
-    const moonUp = moonAlt(d.getTime(), loc.lat, loc.lon) > 0.125;
+    const p = moonPhase(dr), k = (1 - Math.cos(2 * Math.PI * p)) / 2;
+    const moonUp = moonAlt(dr.getTime(), loc.lat, loc.lon) > 0.125;
     const row = (a, b) => '<div class="wx-r"><span>' + a + '</span><b>' + b + '</b></div>';
     const sec = (t, rows) => '<div class="wx-sec"><div class="wx-t">' + t + '</div>' + rows.join('') + '</div>';
     const visF = w && w.visibility != null ? (w.visibility >= 10000 ? Math.round(w.visibility / 1000) : (w.visibility / 1000).toFixed(1)) + ' km' : D;
@@ -2110,7 +2151,12 @@
       el.children[0].textContent = c[0];
       el.children[0].dataset.code = ({ 'New York': 'NYC', 'Buenos Aires': 'BUE', 'Tokyo': 'TYO' })[c[0]] || c[0].slice(0, 3).toUpperCase();
       document.getElementById(ci < 3 ? 'worldL' : 'worldR').appendChild(el);   // 3 cities per side
-      worldCells.push({ name: el.children[0], time: el.children[1], day: el.children[2], dot: el.children[3] });
+      el.tabIndex = 0;
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-pressed', 'false');
+      el.addEventListener('click', () => selectCity(ci));
+      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCity(ci); } });
+      worldCells.push({ el, name: el.children[0], time: el.children[1], day: el.children[2], dot: el.children[3] });
     });
   } catch (e) { worldFmt = []; btnWorld.hidden = true; worldEl.hidden = true; }
 
@@ -2121,22 +2167,41 @@
     if (worldFmt.length) worldEl.hidden = !worldOn;
   }
 
-  function updateWorld(d) {
+  /* ----- Pick a world city: the main clock, date and weather switch to it (tap it again to go back) ----- */
+  function selectCity(i) {
+    tzSel = (i === tzSel) ? -1 : i;
+    tzFmt = tzSel < 0 ? null : new Intl.DateTimeFormat('en-GB', {
+      timeZone: CITIES[tzSel][1], hourCycle: 'h23',
+      year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
+    });
+    loc = tzSel < 0 ? homeLoc : { lat: CITY_LL[tzSel][0], lon: CITY_LL[tzSel][1], gps: false };
+    sunCache = { key: null, v: null }; moonCache = { key: null, v: null }; twCache = { key: null, v: null };
+    wx.data = null; wx.aq = null; wx.err = false; wx.key = ''; wx.next = 0;
+    lastDateKey = ''; lastWorldKey = -1; lastBucket = null; lastSpeak = null;
+    worldCells.forEach((c, k) => {
+      c.el.classList.toggle('sel', k === tzSel);
+      c.el.setAttribute('aria-pressed', k === tzSel ? 'true' : 'false');
+    });
+    fetchWx();
+    renderWx();
+  }
+
+  function updateWorld(real, d) {
     if (!worldOn || !worldFmt.length) return;
     const k = Math.floor(virtualTime / 1000);
     if (k === lastWorldKey) return;
     lastWorldKey = k;
-    const base = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+    const base = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());     // day labels are relative to the shown clock
     worldFmt.forEach((f, i) => {
       const p = {};
-      f.formatToParts(d).forEach(x => { p[x.type] = x.value; });
+      f.formatToParts(real).forEach(x => { p[x.type] = x.value; });
       const diff = Math.round((Date.UTC(+p.year, +p.month - 1, +p.day) - base) / 864e5);
       const tm = p.hour + ':' + p.minute;
       const lbl = diff > 0 ? '+' + diff + ' ' + t('dayWord') : diff < 0 ? '\u2212' + Math.abs(diff) + ' ' + t('dayWord') : '';
       const c = worldCells[i];
       if (c.time.textContent !== tm) c.time.textContent = tm;
       if (c.day.textContent !== lbl) c.day.textContent = lbl;
-      const alt = sunAlt(d, CITY_LL[i][0], CITY_LL[i][1]);
+      const alt = sunAlt(real, CITY_LL[i][0], CITY_LL[i][1]);
       const dc = alt > -0.833 ? 'wc-dot day' : alt > -6 ? 'wc-dot twi' : 'wc-dot';
       if (c.dot.className !== dc) c.dot.className = dc;
     });
@@ -2660,7 +2725,7 @@
       speakOn = true;
       try { localStorage.setItem('braunSpeakEvery', String(m)); } catch (err) {}
       if (!wasOn) {                                   // tap = permission to speak + instant sample
-        const d = new Date(virtualTime);
+        const d = wallOf(virtualTime);
         say(timePhrase(d.getHours(), d.getMinutes()));
       }
     }
