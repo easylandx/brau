@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Braun AB 1 Clock</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🕰️%3C/text%3E%3C/svg%3E" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400&display=swap');
+
+    /* BraunLogo: a small custom typeface (letters B R A U N) drawn after the Braun logo,
+       with the tall arched A. Embedded so it works everywhere. */
+    @font-face {
+      font-family: 'BraunLogo';
+      src: url(data:font/ttf;base64,AAEAAAAKAIAAAwAgT1MvMkhSR4AAAAEoAAAAYGNtYXABpAMfAAABpAAAAHxnbHlmHnIb9gAAAjAAAAOsaGVhZC78hFEAAACsAAAANmhoZWEFmgGWAAAA5AAAACRobXR4CoUAxAAAAYgAAAAabG9jYQI2A24AAAIgAAAAEG1heHAACwBmAAABCAAAACBuYW1lm2Cg9AAABdwAAABmcG9zdAB5AHoAAAZEAAAAMAABAAAAAQAAGltrCV8PPPUAAwPoAAAAAOcCH+cAAAAA5wIf5wAxAAABsQOjAAAAAwACAAAAAAAAAAEAAAO2/2oAAAH0ADEAMQGxAAEAAAAAAAAAAAAAAAAAAAAGAAEAAAAHAGQAAwAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAwG5AZAABQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAPz8/PwAAACAAdQO2/2oAAAPoAMgAAAAAAAAAAAK8ArwAAAAgAAAB9AAAASwAAAHOADEBxwAxAeIAMQG9ADEAMQAAAAAAAgAAAAMAAAAUAAMAAQAAABQABABoAAAAFAAQAAMABAAgAEIATgBSAFUAYgBuAHIAdf//AAAAIABBAE4AUgBVAGEAbgByAHX////hAAD/uP+x/7AAAP+Y/5H/kAABAAAAEgAAAAAAAAAOAAAAAAAAAAAABAACAAQAAgAAAAAAAAB6ALsBHgF7AdYAAwAxAAABnQK8ADMASwBjAAABHwQVFxURFQ8PIyERMzMfEBUXFyc/Bz0CLwgjIxUTPwg1NS8IIyMVAZMCAgIBAgEBAgMDBAUFBgYHBwgHCQgICf72+QgJCAgIBwgGBwYFBAQEAgIBAQIDjgYGAwUEBAICAQIDAgIFAgYGBl9lBgYFBQUDAwEBAQICAwUFAgYDBmUBhwMDAwQDBAME/vYJCAgJBwgHBwYGBQUEAwMCAQK8AQIDAwQFBQYGBwcIBwkICAnMAgINAQIBBAQFBgYGeAMGBgUDAgQBAwK+/swBAgIEBAUFBgaKAwYGAwUEBAECAdAAAAIAMQAAAZYCvAAZADEAADMRITMfDxURIxEjERMzPwc1NS8IIyMVMQEDCQgICQcIBwcGBgUFBAMDAgF0gVQGBgUFBQMDAQEBAgMCAgUDBQYGVAK8AQIDAwQFBQYGBwcIBwkICAn9pgE0/swBlwICBAQFBgYGeAMGBgUDAgQBAwK+AAACADEAAAGxA6MAKgBRAAATPxAfEREjESMRIxElNS8QDxAVETMyAgQFBggJCgsNDQ4PDxAQEREREBAQEA8ODQwMCgkIBgUEAgFtpm0BEwECAgMDBAQFBgUHBgcHBwcHBwgHBwYHBgYFBQQEBAIDAQGmAvQREBAPDw4NDQsKCQgGBQQCAQECBAUGCAkKCw0NDg8PEBAREf0dATP+zQLjCQgHBwcHBgYGBQUFAwQDAgEBAQEBAQIDBAMFBQUGBgYHBwcHCP6rAAABADEAAAGMArwATQAAAREVDxAvEREzERUfDzMzPw81EQGMAgQEBgcICQsLDA0NDg4PDw8QDw4PDg0NDAsKCggHBgQDAgFwAQECAgIDAwQEBAUFBQUFBQYFBQYFBQQFBAQEAwMCAgIBAQK8/fIQDw4PDg0NDAsKCggHBgQDAgEBAgMEBgcICgoLDA0NDg8ODxACDv3yBgUFBQUFBQQEBAMDAgICAQEBAQICAgMDBAQEBQUFBQUFBgIOAAABADEAAAGMArwATQAAMxE/ER8QFREjETUvDyMjDw8VETEBAgMEBgcICgoLDA0NDg8ODxAPDw8ODg0NDAsLCQgHBgQEAnABAQICAgMDBAQEBQQFBQYFBQYFBQUFBQUEBAQDAwICAgEBAg4QDw4PDg0NDAsKCggHBgQDAgEBAgMEBgcICgoLDA0NDg8ODxD98gIYBQUFBgUEBQQEBAMDAgICAQEBAQICAgMDBAQEBQQFBgUFBf3oAAAABAA2AAEAAAAAAAEACQAAAAEAAAAAAAIABwAJAAMAAQQJAAEAEgAQAAMAAQQJAAIADgAiQnJhdW5Mb2dvUmVndWxhcgBCAHIAYQB1AG4ATABvAGcAbwBSAGUAZwB1AGwAYQByAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAAwAlADUAJAA4ADE=) format('truetype');
+      font-display: block;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rgb: 212, 245, 0;
+      --fluor: rgb(var(--rgb));
+      --bg: #0a0a0a;
+      --face: #111111;
+      --shadow: rgba(var(--rgb), 0.08);
+    }
+
+    html { overflow-y: auto; -webkit-text-size-adjust: 100%; }
+
+    body {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      gap: 48px;
+      /* side margins kept explicit so they never get zeroed */
+      padding-top: 32px;
+      /* extra bottom room so the page always scrolls on iPhone and Safari can tuck the address bar away */
+      padding-bottom: 160px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .clock-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      width: 100%;
+    }
+
+    /* Brand label */
+    .brand {
+      font-family: 'BraunLogo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: rgba(var(--rgb), 0.6);
+      transition: opacity 0.18s ease;
+      /* offset trailing letter-spacing so it stays optically centred */
+      padding-left: 0.02em;
+    }
+    .brand.fade { opacity: 0; }
+
+    /* Outer bezel */
+    .bezel {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #2c2c2c, #111 55%, #0d0d0d);
+      box-shadow:
+        0 0 0 2px #222,
+        0 0 0 4px #181818,
+        0 8px 40px rgba(0,0,0,0.85),
+        0 0 60px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* Clock face */
+    .face {
+      width: 296px;
+      height: 296px;
+      border-radius: 50%;
+      background: var(--face);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas#clockCanvas { position: absolute; top: 0; left: 0; }
+
+    .readout-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .date-line {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      padding-left: 0.3em; /* balances trailing letter-spacing */
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: rgba(var(--rgb), 0.35);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Digital time stays exactly centred; the status badge hangs off its right edge */
+    .readout {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: rgba(var(--rgb), 0.45);
+      font-variant-numeric: tabular-nums;
+    }
+    #digitalTime {
+      padding-left: 0.2em; /* balances the trailing letter-spacing so digits sit truly centred */
+      white-space: nowrap;
+    }
+    .status {
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 14px;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    /* Control buttons */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .btn, .cta-btn {
+      display: inline-block;
+      background: transparent;
+      border: 1px solid rgba(var(--rgb), 0.45);
+      color: var(--fluor);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      padding-top: 11px;
+      padding-bottom: 11px;
+      padding-left: 18px;
+      padding-right: 14px; /* 18 - trailing letter-spacing offset */
+      min-width: 86px;
+    }
+
+    .cta-btn {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      padding-top: 13px;
+      padding-bottom: 13px;
+      padding-left: 36px;
+      padding-right: 36px;
+    }
+
+    .btn:hover, .cta-btn:hover {
+      background: rgba(var(--rgb), 0.07);
+      border-color: var(--fluor);
+      box-shadow: 0 0 18px rgba(var(--rgb), 0.15);
+    }
+    .btn:focus-visible, .cta-btn:focus-visible {
+      outline: 1px solid var(--fluor);
+      outline-offset: 3px;
+    }
+    .btn.active {
+      background: rgba(var(--rgb), 0.14);
+      border-color: var(--fluor);
+      box-shadow: 0 0 18px rgba(var(--rgb), 0.22);
+    }
+
+    /* About popup: sits in the page flow between the buttons and EasyLandX,
+       so it can never overlap either of them */
+    .about {
+      display: grid;
+      grid-template-rows: 0fr;
+      width: 100%;
+      max-width: 360px;
+      margin-top: -28px; /* cancels the flex gap while collapsed */
+      opacity: 0;
+      pointer-events: none;
+      transition: grid-template-rows 0.35s ease, margin-top 0.35s ease, opacity 0.3s ease;
+    }
+    .about.show {
+      grid-template-rows: 1fr;
+      margin-top: 0;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .about-clip { min-height: 0; overflow: hidden; }
+    .about-card {
+      background: rgba(14,14,14,0.96);
+      border: 1px solid rgba(var(--rgb), 0.45);
+      border-radius: 3px;
+      box-shadow: 0 0 30px rgba(var(--rgb), 0.12);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .about-inner {
+      padding-top: 22px;
+      padding-bottom: 20px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .about-title {
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(var(--rgb), 0.5);
+      margin-bottom: 12px;
+    }
+    .about-text {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--fluor);
+    }
+    .about-bar {
+      height: 2px;
+      background: var(--fluor);
+      transform-origin: left center;
+      transform: scaleX(1);
+    }
+    .about.show .about-bar {
+      animation: drain 8s linear forwards;
+    }
+    @keyframes drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+    @media (min-width: 601px) {
+      #btnBack { min-width: 112px; }
+    }
+
+    /* Mobile: row 1 = Back / Speed / Slow, row 2 = Reset / About / Color */
+    @media (max-width: 600px) {
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 340px;
+      }
+      .controls .btn {
+        min-width: 0;
+        width: 100%;
+        grid-column: span 2;
+      }
+    }
+
+    /* ---------- Model switcher + new clock shapes ---------- */
+    .models {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 720px;
+    }
+    .models .btn { min-width: 0; }
+
+    /* Split-flap and digital clocks sit in a rounded square plaque instead of a round bezel */
+    body[data-model="flip"] .bezel,
+    body[data-model="word"] .bezel,
+    body[data-model="pendulum"] .bezel,
+    body[data-model="digital"] .bezel {
+      border-radius: 34px;
+      background: linear-gradient(145deg, #2c2c2c, #111 55%, #0d0d0d);
+    }
+    body[data-model="flip"] .face,
+    body[data-model="word"] .face,
+    body[data-model="pendulum"] .face,
+    body[data-model="digital"] .face { border-radius: 22px; }
+
+    @media (max-width: 600px) {
+      .models {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 340px;
+      }
+      .models .btn {
+        width: 100%;
+        letter-spacing: 0.18em;
+        padding-left: 6px;
+        padding-right: 4px;
+      }
+    }
+
+    /* ---------- Speak the time (drop-down, left of the bird window) ---------- */
+    .speak-dd {
+      position: absolute;
+      right: calc(50% + 54px);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 30;
+    }
+    .speak-dd[hidden] { display: none; }
+    .speak-btn {
+      position: relative;
+      min-width: 0;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      padding: 8px 20px 8px 9px;
+      white-space: nowrap;
+    }
+    .speak-btn::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      width: 4px;
+      height: 4px;
+      border-right: 1px solid var(--fluor);
+      border-bottom: 1px solid var(--fluor);
+      transform: translateY(-75%) rotate(45deg);
+      transition: transform 0.2s;
+    }
+    .speak-btn[aria-expanded="true"]::after { transform: translateY(-25%) rotate(225deg); }
+    .speak-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 150px;
+      padding: 4px 0;
+      background: #0e0e0e;
+      border: 1px solid rgba(var(--rgb), 0.45);
+      border-radius: 3px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 24px rgba(var(--rgb), 0.12);
+    }
+    .speak-menu[hidden] { display: none; }
+    .speak-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      color: var(--fluor);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 9px 14px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .speak-opt + .speak-opt { border-top: 1px solid rgba(var(--rgb), 0.12); }
+    .speak-opt:hover, .speak-opt:focus-visible { background: rgba(var(--rgb), 0.1); outline: none; }
+    .speak-opt.active { background: rgba(var(--rgb), 0.18); }
+
+    /* ---------- Cuckoo ---------- */
+    .cuckoo-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .cuckoo {
+      position: relative;
+      width: 84px;
+      height: 70px;
+      border: 1px solid rgba(var(--rgb), 0.45);
+      border-radius: 42px 42px 5px 5px;
+      background: #050505;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 0 24px var(--shadow);
+    }
+    .cuckoo:focus-visible { outline: 1px solid var(--fluor); outline-offset: 3px; }
+    .cuckoo::after {                      /* floor the bird stands on */
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 6px;
+      background: #1a1a1a;
+      border-top: 1px solid rgba(var(--rgb), 0.25);
+      z-index: 1;
+    }
+    .cuckoo-bird {
+      position: absolute;
+      left: 50%;
+      bottom: 3px;
+      width: 58px;
+      height: 54px;
+      margin-left: -29px;
+      color: var(--fluor);
+      transform: translateY(115%);
+      transition: transform 0.45s cubic-bezier(0.3, 1.45, 0.5, 1);
+      transform-origin: 50% 100%;
+      z-index: 0;
+    }
+    .cuckoo.out .cuckoo-bird { transform: translateY(0); }
+    .cuckoo.calling .cuckoo-bird { animation: cuckoo-tilt 0.32s ease-in-out infinite alternate; }
+    @keyframes cuckoo-tilt { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-2px) rotate(3deg); } }
+    .cuckoo-bird svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .beak-low { transform-origin: 53px 28px; transition: transform 0.07s ease-out; }
+    .cuckoo.open .beak-low { transform: rotate(24deg); }
+
+    .cuckoo-door {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 50%;
+      background: #171717;
+      z-index: 2;
+      transition: transform 0.35s ease;
+    }
+    .cuckoo-door.l { left: 0;  transform-origin: left center;  border-right: 1px solid rgba(var(--rgb), 0.35); }
+    .cuckoo-door.r { right: 0; transform-origin: right center; border-left: 1px solid rgba(var(--rgb), 0.35); }
+    .cuckoo.ajar .cuckoo-door { transform: scaleX(0); }
+
+    .cuckoo-sound {
+      position: absolute;
+      left: calc(50% + 54px);
+      top: 50%;
+      transform: translateY(-50%);
+      min-width: 0;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      padding: 8px 6px 8px 10px;
+      white-space: nowrap;
+    }
+
+    #btnAwake { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
+    #btnWorld { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
+    @media (max-width: 600px) {
+      #btnAwake { grid-column: 2 / span 2; }
+      #btnWorld { grid-column: 4 / span 2; }
+    }
+
+    .btn[hidden] { display: none; }
+    #btnTick { letter-spacing: 0.15em; padding-left: 12px; padding-right: 10px; }
+    @media (max-width: 600px) {
+      #btnTick { grid-column: 3 / span 2; }
+    }
+
+    /* ---------- Language toggle (top right, monochrome flags) ---------- */
+    .lang {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 40;
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid rgba(var(--rgb), 0.3);
+      border-radius: 2px;
+      color: var(--fluor);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      padding: 5px 6px 5px 8px;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lang-btn svg { width: 20px; height: 13px; display: block; }
+    .lang-btn:hover { opacity: 0.85; }
+    .lang-btn.active {
+      opacity: 1;
+      border-color: var(--fluor);
+      background: rgba(var(--rgb), 0.14);
+      box-shadow: 0 0 14px rgba(var(--rgb), 0.2);
+    }
+    .lang-btn:focus-visible { outline: 1px solid var(--fluor); outline-offset: 2px; }
+
+    /* ---------- World clock row ---------- */
+    /* Column pinned to the left side of the main clock, so nothing sits below it */
+    .stage { position: relative; display: flex; justify-content: center; flex-shrink: 0; }
+    .world { position: absolute; inset: 0; pointer-events: none; }
+    .wside {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      width: max-content;
+    }
+    .wside.l { right: calc(100% + 22px); }
+    .wside.r { left: calc(100% + 22px); }
+    .wside.l .wc {
+      padding: 2px 12px 2px 0;
+      border-left: 0;
+      border-right: 1px solid rgba(var(--rgb), 0.25);
+      text-align: right;
+    }
+    .world[hidden] { display: none; }
+    .wc {
+      min-width: 0;
+      padding: 2px 0 2px 12px;
+      border-left: 1px solid rgba(var(--rgb), 0.25);
+      text-align: left;
+      font-variant-numeric: tabular-nums;
+    }
+    .wc-city {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: rgba(var(--rgb), 0.5);
+    }
+    .wc-time {
+      font-size: 15px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      margin-top: 3px;
+      color: var(--fluor);
+    }
+    .wc-day {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      height: 10px;
+      margin-top: 2px;
+      text-transform: uppercase;
+      color: rgba(var(--rgb), 0.45);
+    }
+    /* Phones: only ~35px beside the clock, so 3-letter codes and small times */
+    @media (max-width: 700px) {
+      .wside { gap: 30px; }
+      .wside.l { right: calc(100% + 5px); }
+      .wside.r { left: calc(100% + 5px); }
+      .wc, .wside.l .wc { padding: 0; border: 0; text-align: center; }
+      .wc-city { font-size: 0; letter-spacing: 0; }
+      .wc-city::before { content: attr(data-code); font-size: 9px; letter-spacing: 0.08em; }
+      .wc-time { font-size: 14.5px; letter-spacing: 0; margin-top: 2px; font-weight: 400; }
+      .wc-day { font-size: 8px; letter-spacing: 0.03em; height: 9px; margin-top: 1px; }
+      /* slightly smaller clock frees ~45px per side for bigger world times */
+      .stage .bezel { zoom: 0.84; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cuckoo-bird, .cuckoo-door { transition: none; }
+      .cuckoo.calling .cuckoo-bird { animation: none; }
+    }
+
+    /* ---------- AR wall view ---------- */
+    .cta-btn[hidden], .ar[hidden] { display: none; }
+    button.cta-btn { font-family: inherit; }
+    #arCanvas { position: absolute; top: 0; left: 0; width: 296px; height: 296px; }
+    .ar { position: fixed; inset: 0; z-index: 1000; background: #000; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+    .ar video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .ar-stage { position: absolute; inset: 0; overflow: hidden; }
+    .ar-plane { position: absolute; left: 50%; top: 50%; width: 320px; height: 320px; margin: -160px 0 0 -160px; transform-origin: 50% 50%; will-change: transform; }
+    .ar-halo { position: absolute; inset: -110px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb), .22), rgba(var(--rgb), 0) 68%); mix-blend-mode: screen; pointer-events: none; }
+    .ar-cuckoo { position: absolute; left: 50%; margin-left: -42px; bottom: calc(100% + 73px); pointer-events: none; cursor: default; }
+    .ar-brand { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 26px; text-align: center; }
+    .ar-read { position: absolute; left: 0; right: 0; top: 100%; margin-top: 26px; text-align: center; color: rgba(var(--rgb), .85); text-shadow: 0 0 10px rgba(var(--rgb), .6); font-variant-numeric: tabular-nums; }
+    .ar-time { font-size: 20px; font-weight: 300; letter-spacing: .2em; }
+    .ar-date { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; margin-top: 8px; opacity: .7; }
+    .ar-top { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 12px); display: flex; justify-content: center; gap: 8px; padding: 0 12px; flex-wrap: wrap; }
+    .ar-bottom { position: absolute; left: 0; right: 0; margin: 0 auto; max-width: 340px; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; padding: 0 12px; }
+    .ar-bottom .btn { grid-column: span 2; min-width: 0; width: 100%; }
+    .ar .btn { background: rgba(0,0,0,.5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); min-width: 0; }
+    .ar-about { position: absolute; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 340px; bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); background: rgba(14,14,14,.92); border: 1px solid rgba(var(--rgb), .45); border-radius: 3px; padding: 16px 18px; color: var(--fluor); font-size: 13px; font-weight: 300; line-height: 1.55; display: none; }
+    .ar-about.show { display: block; }
+    .ar-hint { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 112px); text-align: center; font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: rgba(255,255,255,.8); text-shadow: 0 1px 6px #000; transition: opacity .6s; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<div class="lang" id="langSwitch" role="group" aria-label="Language">
+  <button class="lang-btn active" type="button" data-lang="en" aria-label="English" aria-pressed="true">
+    <svg viewBox="0 0 24 16" fill="none" stroke="currentColor" aria-hidden="true">
+      <rect x=".5" y=".5" width="23" height="15" stroke-width="1"/>
+      <path d="M1 1L23 15M23 1L1 15" stroke-width="1.5" opacity=".55"/>
+      <path d="M12 1V15M1 8H23" stroke-width="4" opacity=".95"/>
+    </svg><span>EN</span>
+  </button>
+  <button class="lang-btn" type="button" data-lang="es" aria-label="Espa&ntilde;ol" aria-pressed="false">
+    <svg viewBox="0 0 24 16" fill="currentColor" aria-hidden="true">
+      <rect x=".5" y=".5" width="23" height="15" fill="none" stroke="currentColor" stroke-width="1"/>
+      <rect x="1" y="1" width="22" height="3" opacity=".9"/>
+      <rect x="1" y="4" width="22" height="8" opacity=".22"/>
+      <rect x="1" y="12" width="22" height="3" opacity=".9"/>
+    </svg><span>ES</span>
+  </button>
+</div>
+
+<div class="clock-wrap">
+  <div class="cuckoo-wrap">
+    <button class="cuckoo" id="cuckoo" type="button" aria-label="Cuckoo clock: tap to hear one call">
+      <span class="cuckoo-bird">
+        <svg viewBox="0 0 64 60" aria-hidden="true">
+          <g fill="currentColor">
+            <path d="M4 47 L20 34 L25 47 Z"/>
+            <ellipse cx="30" cy="40" rx="18" ry="11" transform="rotate(-12 30 40)"/>
+            <path d="M36 38 L48 29 L52 38 Z"/>
+            <circle cx="46" cy="26" r="8"/>
+            <path d="M53 23 L63 26.5 L53 28 Z"/>
+            <path class="beak-low" d="M53 28 L61 30.5 L53 32 Z"/>
+          </g>
+          <circle cx="48" cy="24.5" r="1.7" fill="#0c0c0c"/>
+          <path d="M22 42 Q31 33 41 41" fill="none" stroke="#0c0c0c" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+          <path d="M30 50 V57 M37 50 V57" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="cuckoo-door l"></span>
+      <span class="cuckoo-door r"></span>
+    </button>
+    <div class="speak-dd" id="speakDd">
+      <button class="btn speak-btn" id="btnSpeak" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Speak the time">Speak off</button>
+      <div class="speak-menu" id="speakMenu" role="menu" aria-label="Speak the time every" hidden>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="0">Speak off</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="1">1 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="5">5 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="10">10 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="15">15 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="20">20 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="30">30 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="45">45 min</button>
+        <button class="speak-opt" type="button" role="menuitemradio" data-min="60">60 min</button>
+      </div>
+    </div>
+    <button class="btn cuckoo-sound active" id="cuckooSound" type="button" aria-label="Turn the cuckoo on or off">Cuckoo on</button>
+  </div>
+  <span class="brand" id="brand">Braun</span>
+
+  <div class="stage">
+    <div class="world" id="world" role="group" aria-label="World clock">
+      <div class="wside l" id="worldL"></div>
+      <div class="wside r" id="worldR"></div>
+    </div>
+    <div class="bezel">
+      <div class="face">
+        <canvas id="clockCanvas" width="296" height="296"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="readout-group">
+    <div class="readout">
+      <span id="digitalTime"></span>
+      <span class="status" id="status"></span>
+    </div>
+    <div class="date-line" id="dateLine"></div>
+  </div>
+
+  <div class="models" id="models" role="group" aria-label="Clock model">
+    <button class="btn model-btn active" type="button" data-model="analog">Analog</button>
+    <button class="btn model-btn" type="button" data-model="flip">Split-Flap</button>
+    <button class="btn model-btn" type="button" data-model="word">Word</button>
+    <button class="btn model-btn" type="button" data-model="digital">Digital</button>
+    <button class="btn model-btn" type="button" data-model="pendulum">Pendulum</button>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="btnBack" type="button">Back</button>
+    <button class="btn" id="btnSpeed" type="button">Speed</button>
+    <button class="btn" id="btnSlow" type="button">Slow</button>
+    <button class="btn" id="btnReset" type="button">Reset</button>
+    <button class="btn" id="btnAbout" type="button">About</button>
+    <button class="btn" id="btnColor" type="button">Color</button>
+    <button class="btn" id="btnAwake" type="button" aria-pressed="false">Awake off</button>
+    <button class="btn" id="btnWorld" type="button" aria-pressed="true">World on</button>
+    <button class="btn active" id="btnTick" type="button" hidden>Tick on</button>
+  </div>
+
+  <div class="about" id="about" role="status" aria-live="polite">
+    <div class="about-clip">
+      <div class="about-card" id="aboutCard">
+        <div class="about-inner">
+          <div class="about-title">About time</div>
+          <div class="about-text" id="aboutText"></div>
+        </div>
+        <div class="about-bar" id="aboutBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="cta-btn" id="btnAR" type="button" hidden>View on my wall · AR</button>
+
+  <a class="cta-btn" href="https://easylandx.github.io" target="_blank" rel="noopener">
+    EasyLandX
+  </a>
+</div>
+
+
+<div class="ar" id="ar" hidden>
+  <video id="arVideo" playsinline muted autoplay></video>
+  <div class="ar-stage" id="arStage">
+    <div class="ar-plane" id="arPlane">
+      <div class="ar-halo"></div>
+      <div class="cuckoo ar-cuckoo" id="arCuckoo" aria-hidden="true">
+        <span class="cuckoo-bird">
+          <svg viewBox="0 0 64 60">
+            <g fill="currentColor">
+              <path d="M4 47 L20 34 L25 47 Z"/>
+              <ellipse cx="30" cy="40" rx="18" ry="11" transform="rotate(-12 30 40)"/>
+              <path d="M36 38 L48 29 L52 38 Z"/>
+              <circle cx="46" cy="26" r="8"/>
+              <path d="M53 23 L63 26.5 L53 28 Z"/>
+              <path class="beak-low" d="M53 28 L61 30.5 L53 32 Z"/>
+            </g>
+            <circle cx="48" cy="24.5" r="1.7" fill="#0c0c0c"/>
+            <path d="M22 42 Q31 33 41 41" fill="none" stroke="#0c0c0c" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+            <path d="M30 50 V57 M37 50 V57" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="cuckoo-door l"></span>
+        <span class="cuckoo-door r"></span>
+      </div>
+      <span class="brand ar-brand" id="arBrand">Braun</span>
+      <div class="bezel"><div class="face"><canvas id="arCanvas" width="740" height="740"></canvas></div></div>
+      <div class="ar-read"><div class="ar-time" id="arTime"></div><div class="ar-date" id="arDate"></div></div>
+    </div>
+  </div>
+  <div class="ar-hint" id="arHint">Drag to move · pinch to resize</div>
+  <div class="ar-top">
+    <button class="btn" id="arExit" type="button">Exit</button>
+    <button class="btn" id="arModel" type="button">Model</button>
+    <button class="btn" id="arShot" type="button">Photo</button>
+    <button class="btn" id="arCenter" type="button">Center</button>
+    <button class="btn" id="arLock" type="button">Lock</button>
+    <button class="btn" id="arFade" type="button">Fade</button>
+  </div>
+  <div class="ar-about" id="arAbout"></div>
+  <div class="ar-bottom">
+    <button class="btn" data-for="btnBack" type="button">Back</button>
+    <button class="btn" data-for="btnSpeed" type="button">Speed</button>
+    <button class="btn" data-for="btnSlow" type="button">Slow</button>
+    <button class="btn" data-for="btnReset" type="button">Reset</button>
+    <button class="btn" data-for="btnAbout" type="button">About</button>
+    <button class="btn" data-for="btnColor" type="button">Color</button>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('clockCanvas');
+  let ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const cx = W / 2;
+  const cy = H / 2;
+  const R = cx - 4;
+  const FACE_BG = '#111111';
+
+  /* ---------- State ---------- */
+  const COLORS = [
+    [212, 245, 0],   // lime (default)
+    [0, 240, 255],   // cyan
+    [255, 43, 214],  // magenta
+    [255, 122, 0],   // orange
+    [255, 59, 92],   // hot red
+    [57, 255, 20],   // neon green
+    [178, 107, 255], // violet
+    [255, 255, 255]  // white
+  ];
+  const MAX_SPEED = 65536;
+  const MIN_SPEED = 1 / 1024;
+
+  let colorIndex = 0;
+  let direction = 1;
+  let speed = 1;
+  let virtualTime = Date.now();
+  let lastFrame = performance.now();
+
+  let FLUOR, FLUOR_DIM;
+  function rgba(a) { const c = COLORS[colorIndex]; return `rgba(${c[0]},${c[1]},${c[2]},${a})`; }
+
+  function applyColor() {
+    const c = COLORS[colorIndex];
+    document.documentElement.style.setProperty('--rgb', c.join(', '));
+    FLUOR = `rgb(${c.join(',')})`;
+    FLUOR_DIM = rgba(0.55);
+  }
+  applyColor();
+
+  /* ---------- Language (EN / ES) ---------- */
+  const I18N = {
+    en: {
+      m_analog: 'Analog', m_flip: 'Split-Flap', m_word: 'Word', m_digital: 'Digital', m_pendulum: 'Pendulum',
+      tickOn: 'Tick on', tickOff: 'Tick off',
+      back: 'Back', forward: 'Forward', speed: 'Speed', slow: 'Slow', reset: 'Reset', about: 'About', color: 'Color',
+      awakeOn: 'Awake on', awakeOff: 'Awake off', notAllowed: 'Not allowed',
+      worldOn: 'World on', worldOff: 'World off', cuckooOn: 'Cuckoo on', cuckooOff: 'Cuckoo off',
+      speakOff: 'Speak off', speakN: n => 'Speak ' + n + 'm',
+      aboutTitle: 'About time', viewAR: 'View on my wall · AR',
+      exit: 'Exit', model: 'Model', photo: 'Photo', center: 'Center', lock: 'Lock', unlock: 'Unlock', fade: 'Fade',
+      hint: 'Drag to move · pinch to resize',
+      alertMotion: 'Motion access is needed so the clock stays fixed on your wall. Allow it for this site and try again.',
+      alertAR: 'Could not start AR: ',
+      cuckooAria: 'Cuckoo clock: tap to hear one call', cuckooToggleAria: 'Turn the cuckoo on or off',
+      speakAria: 'Speak the time', speakMenuAria: 'Speak the time every', dayWord: 'day',
+      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      wd: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'],
+      cities: ['Madrid', 'London', 'New York', 'Buenos Aires', 'Tokyo', 'Sydney']
+    },
+    es: {
+      m_analog: 'Analógico', m_flip: 'Paletas', m_word: 'Palabras', m_digital: 'Digital', m_pendulum: 'Péndulo',
+      tickOn: 'Tic on', tickOff: 'Tic off',
+      back: 'Atrás', forward: 'Adelante', speed: 'Rápido', slow: 'Lento', reset: 'Reiniciar', about: 'Acerca', color: 'Color',
+      awakeOn: 'Pantalla on', awakeOff: 'Pantalla off', notAllowed: 'No permitido',
+      worldOn: 'Mundo on', worldOff: 'Mundo off', cuckooOn: 'Cuco on', cuckooOff: 'Cuco off',
+      speakOff: 'Voz off', speakN: n => 'Voz ' + n + 'm',
+      aboutTitle: 'Sobre el tiempo', viewAR: 'Ver en mi pared · AR',
+      exit: 'Salir', model: 'Modelo', photo: 'Foto', center: 'Centrar', lock: 'Fijar', unlock: 'Soltar', fade: 'Tenue',
+      hint: 'Arrastra para mover · pellizca para ajustar',
+      alertMotion: 'Hace falta acceso al movimiento para que el reloj quede fijo en tu pared. Permítelo para este sitio e inténtalo de nuevo.',
+      alertAR: 'No se pudo iniciar la RA: ',
+      cuckooAria: 'Reloj de cuco: toca para oír un canto', cuckooToggleAria: 'Activar o desactivar el cuco',
+      speakAria: 'Decir la hora', speakMenuAria: 'Decir la hora cada', dayWord: 'día',
+      days: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+      months: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+      wd: ['DO', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA'],
+      cities: ['Madrid', 'Londres', 'Nueva York', 'Buenos Aires', 'Tokio', 'Sídney']
+    }
+  };
+  let lang = 'en';
+  try { const sv = localStorage.getItem('braunLang'); if (sv === 'es' || sv === 'en') lang = sv; } catch (e) {}
+  const t = k => I18N[lang][k];
+
+  /* ---------- Drawing ---------- */
+  function drawFace() {
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = FACE_BG;
+    ctx.fill();
+
+    const grd = ctx.createRadialGradient(cx, cy, R * 0.7, cx, cy, R);
+    grd.addColorStop(0, rgba(0));
+    grd.addColorStop(1, rgba(0.04));
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    for (let i = 0; i < 60; i++) {
+      const angle = (i / 60) * Math.PI * 2 - Math.PI / 2;
+      const isHour = i % 5 === 0;
+      const tickOuter = R - 3;
+      const tickInner = isHour ? R - 16 : R - 9;
+
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(angle) * tickOuter, cy + Math.sin(angle) * tickOuter);
+      ctx.lineTo(cx + Math.cos(angle) * tickInner, cy + Math.sin(angle) * tickInner);
+      ctx.strokeStyle = isHour ? FLUOR : FLUOR_DIM;
+      ctx.lineWidth = isHour ? 2.5 : 1;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      if (isHour) {
+        const hour = i === 0 ? 12 : i / 5;
+        const numR = R - 32;
+        const nx = cx + Math.cos(angle) * numR;
+        const ny = cy + Math.sin(angle) * numR;
+        ctx.fillStyle = FLUOR;
+        ctx.font = `300 ${hour === 12 || hour === 6 ? 18 : 15}px 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(hour), nx, ny);
+      }
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = FLUOR;
+    ctx.fill();
+  }
+
+  function drawHand(angleDeg, length, width, color) {
+    const angle = angleDeg * Math.PI / 180;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(0, length * 0.18);
+    ctx.lineTo(0, -length);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 6;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSecondHand(angleDeg) {
+    const angle = angleDeg * Math.PI / 180;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+
+    ctx.beginPath();
+    ctx.moveTo(0, R * 0.28);
+    ctx.lineTo(0, -(R * 0.72));
+    ctx.strokeStyle = FLUOR;
+    ctx.lineWidth = 1.2;
+    ctx.lineCap = 'round';
+    ctx.shadowColor = FLUOR;
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0, R * 0.18, 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = FLUOR;
+    ctx.shadowBlur = 10;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  /* ---------- Main loop ---------- */
+  const digitalEl = document.getElementById('digitalTime');
+  const statusEl = document.getElementById('status');
+  const dateEl = document.getElementById('dateLine');
+  let DAYS = I18N[lang].days;
+  let MONTHS = I18N[lang].months;
+  let lastDateKey = '';
+  const pad = n => String(n).padStart(2, '0');
+
+  function updateStatus() {
+    const parts = [];
+    if (direction < 0) parts.push('◀');
+    if (speed > 1) parts.push('×' + speed);
+    else if (speed < 1) parts.push('×1/' + Math.round(1 / speed));
+    statusEl.textContent = parts.join(' ');
+  }
+
+  function draw(now) {
+    const dt = now - lastFrame;
+    lastFrame = now;
+    virtualTime += dt * speed * direction;
+
+    const d = new Date(virtualTime);
+    curDate = d;
+    frameNow = now;
+    checkCuckoo(d, dt);
+    checkSpeak(d, dt);
+    updateWorld(d);
+    checkTick(dt);
+    if (model === 'flip') updateFlaps(d);
+    const hrs  = d.getHours() % 12;
+    const mins = d.getMinutes();
+    const secs = d.getSeconds();
+    const ms   = d.getMilliseconds();
+
+    digitalEl.textContent = `${pad(d.getHours())}:${pad(mins)}:${pad(secs)}.${String(ms).padStart(3, '0')}`;
+
+    // Date follows the virtual clock: rolls back past midnight in reverse, forward at speed
+    const dateKey = d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate();
+    if (dateKey !== lastDateKey) {
+      lastDateKey = dateKey;
+      dateEl.textContent = `${DAYS[d.getDay()]} ${pad(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    const secFrac   = secs + ms / 1000;
+    const secAngle  = secFrac * 6;
+    const minAngle  = (mins + secFrac / 60) * 6;
+    const hourAngle = (hrs + mins / 60 + secFrac / 3600) * 30;
+
+    paintClock(hourAngle, minAngle, secAngle);
+
+    if (arActive) {            // second, sharper pass for the AR wall clock
+      const mainCtx = ctx;
+      ctx = arCtx;
+      arCtx.setTransform(AR_K, 0, 0, AR_K, 0, 0);
+      paintClock(hourAngle, minAngle, secAngle);
+      ctx = mainCtx;
+      arTick();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  /* ---------- Controls ---------- */
+  const brandEl = document.getElementById('brand');
+  const btnBack = document.getElementById('btnBack');
+  const btnSpeed = document.getElementById('btnSpeed');
+  const btnSlow = document.getElementById('btnSlow');
+
+  function syncSpeedButtons() {
+    btnSpeed.classList.toggle('active', speed > 1);
+    btnSlow.classList.toggle('active', speed < 1);
+  }
+  const btnAbout = document.getElementById('btnAbout');
+
+  // Brand label: plain text set in the BraunLogo typeface (the tall A is part of the font)
+  function setBrand(text) {
+    if (brandEl.dataset.word === text) return;
+    brandEl.classList.add('fade');
+    setTimeout(() => {
+      brandEl.textContent = text;
+      brandEl.dataset.word = text;
+      brandEl.classList.remove('fade');
+    }, 180);
+  }
+  brandEl.dataset.word = 'Braun';
+
+  // BACK: toggle time direction + spell brand backwards
+  btnBack.addEventListener('click', () => {
+    direction *= -1;
+    btnBack.classList.toggle('active', direction < 0);
+    btnBack.textContent = direction < 0 ? t('forward') : t('back');
+    setBrand(direction < 0 ? 'Braun'.split('').reverse().join('') : 'Braun');
+    updateStatus();
+  });
+
+  // SPEED: double each press (wraps back to x1 after x65536)
+  btnSpeed.addEventListener('click', () => {
+    speed = speed >= MAX_SPEED ? 1 : speed * 2;
+    syncSpeedButtons();
+    updateStatus();
+  });
+
+  // SLOW: halve the speed on each press (wraps back to x1 after x1/1024)
+  btnSlow.addEventListener('click', () => {
+    speed = speed <= MIN_SPEED ? 1 : speed / 2;
+    syncSpeedButtons();
+    updateStatus();
+  });
+
+  // RESET: default mode, speed, colour and real time
+  document.getElementById('btnReset').addEventListener('click', () => {
+    direction = 1;
+    speed = 1;
+    colorIndex = 0;
+    virtualTime = Date.now();
+    lastFrame = performance.now();
+    applyColor();
+    btnBack.classList.remove('active');
+    btnBack.textContent = t('back');
+    syncSpeedButtons();
+    setBrand('Braun');
+    hideAbout();
+    updateStatus();
+  });
+
+  // COLOR: cycle through 8 neon colours
+  document.getElementById('btnColor').addEventListener('click', () => {
+    colorIndex = (colorIndex + 1) % COLORS.length;
+    applyColor();
+  });
+
+  // ABOUT: 8-second popup with a saying about time
+  const SAYINGS_EN = [
+    "Time is the only currency you spend without ever seeing your balance, so spend it on things you would be proud to have paid for.",
+    "A clock does not make time; it only shows how generously or how stingily you are using it.",
+    "The hours spent waiting for the perfect moment are the very hours that could have built it.",
+    "Yesterday is a closed ledger, tomorrow an unsigned cheque, and today the only pen you actually hold.",
+    "Patience is simply time given room to work: the oak is just an acorn that refused to hurry.",
+    "Every second is a small door; most people walk past thousands of them while searching for a bigger one.",
+    "Time heals less than it reveals: given enough of it, what truly mattered stands apart from what merely felt urgent.",
+    "Good design, like good timekeeping, is quiet: it tells you exactly what you need and nothing you don’t.",
+    "You cannot slow the clock, but you can deepen the minute, because attention is the only way to make an hour longer.",
+    "The best time to begin was long ago; the second best is the tick you are hearing right now.",
+    "Minutes are the coins of a life: hoard none, squander few, and give the best ones to the people who matter."
+  ];
+
+  const aboutEl = document.getElementById('about');
+  const aboutText = document.getElementById('aboutText');
+  let aboutTimer = null;
+  let sayingIdx = -1;
+  let order = [];
+  const SAYINGS_ES = [
+    "El tiempo es la única moneda que gastas sin ver nunca tu saldo, así que gástalo en cosas de las que estarías orgulloso.",
+    "Un reloj no crea el tiempo; solo muestra con cuánta generosidad o tacañería lo estás usando.",
+    "Las horas que pasas esperando el momento perfecto son las mismas que podrían haberlo construido.",
+    "Ayer es un libro cerrado, mañana un cheque sin firmar, y hoy la única pluma que de verdad tienes en la mano.",
+    "La paciencia es simplemente tiempo con espacio para trabajar: el roble es solo una bellota que se negó a apresurarse.",
+    "Cada segundo es una pequeña puerta; la mayoría pasa junto a miles mientras busca una más grande.",
+    "El tiempo cura menos de lo que revela: con suficiente de él, lo que de verdad importaba se separa de lo que solo parecía urgente.",
+    "El buen diseño, como la buena relojería, es silencioso: te dice exactamente lo que necesitas y nada que no.",
+    "No puedes frenar el reloj, pero sí profundizar el minuto, porque la atención es la única forma de alargar una hora.",
+    "El mejor momento para empezar fue hace mucho; el segundo mejor es el tictac que estás oyendo ahora.",
+    "Los minutos son las monedas de una vida: no acapares ninguno, malgasta pocos y entrega los mejores a quienes importan."
+  ];
+  const curSayings = () => (lang === 'es' ? SAYINGS_ES : SAYINGS_EN);
+
+  function nextSaying() {
+    if (!order.length) {
+      order = curSayings().map((_, i) => i).sort(() => Math.random() - 0.5);
+      if (order[order.length - 1] === sayingIdx && order.length > 1) order.reverse();
+    }
+    sayingIdx = order.pop();
+    return curSayings()[sayingIdx];
+  }
+
+  function hideAbout() {
+    clearTimeout(aboutTimer);
+    aboutEl.classList.remove('show');
+  }
+
+  function showAbout() {
+    clearTimeout(aboutTimer);
+    aboutText.textContent = nextSaying();
+    // restart the progress-bar animation without collapsing the window
+    const bar = document.getElementById('aboutBar');
+    bar.style.animation = 'none';
+    void bar.offsetWidth;
+    bar.style.animation = '';
+    aboutEl.classList.add('show');
+    aboutTimer = setTimeout(hideAbout, 8000);
+  }
+
+  btnAbout.addEventListener('click', showAbout);
+  document.getElementById('aboutCard').addEventListener('click', hideAbout);
+
+  function paintClock(hourAngle, minAngle, secAngle) {
+    ctx.clearRect(0, 0, W, H);
+    if (model === 'flip') { paintFlip(); return; }
+    if (model === 'word') { paintWord(); return; }
+    if (model === 'pendulum') { paintPendulum(); return; }
+    if (model === 'digital') { paintDigital(); return; }
+    drawFace();
+    drawHand(hourAngle, R * 0.48, 5.5, FLUOR);
+    drawHand(minAngle, R * 0.72, 3.5, FLUOR);
+    drawSecondHand(secAngle);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = FLUOR;
+    ctx.fill();
+  }
+
+  /* ---------- Clock models: analog (default), split-flap, digital ---------- */
+  const MODELS = ['analog', 'flip', 'word', 'digital', 'pendulum'];
+  let model = 'analog';
+  let curDate = new Date();
+  let frameNow = 0;
+  let flaps = null;
+  const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+
+  // Rounded rectangle path (works on any 2D context)
+  function rr(g, x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+
+  // Shared rounded plaque behind both new models
+  function drawPlaque() {
+    rr(ctx, 0, 0, W, H, 22);
+    ctx.fillStyle = FACE_BG;
+    ctx.fill();
+    const grd = ctx.createRadialGradient(cx, cy, R * 0.45, cx, cy, R * 1.4);
+    grd.addColorStop(0, rgba(0));
+    grd.addColorStop(1, rgba(0.035));
+    rr(ctx, 0, 0, W, H, 22);
+    ctx.fillStyle = grd;
+    ctx.fill();
+  }
+
+  function setModel(m) {
+    if (MODELS.indexOf(m) < 0) m = 'analog';
+    model = m;
+    flaps = null;                       // flaps re-seed from the current time, no flip on switch
+    document.body.dataset.model = m;
+    const tb = document.getElementById('btnTick');
+    if (tb) tb.hidden = m !== 'pendulum';
+    document.querySelectorAll('.model-btn').forEach(b => b.classList.toggle('active', b.dataset.model === m));
+    try { localStorage.setItem('braunClockModel', m); } catch (e) {}
+  }
+
+  /* ----- Split-flap ----- */
+  const FLIP_MS = 420;
+
+  function updateFlaps(d) {
+    const s = pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+    if (!flaps) {
+      flaps = s.split('').map(c => ({ cur: c, prev: c, t0: 0, dur: 0 }));
+      return;
+    }
+    for (let i = 0; i < 6; i++) {
+      const f = flaps[i];
+      if (f.cur !== s[i]) {
+        f.prev = f.cur;
+        f.cur = s[i];
+        f.t0 = frameNow;
+        f.dur = speed > 2 ? 0 : FLIP_MS;   // too fast to flip nicely: swap instantly
+      }
+    }
+  }
+
+  // One half of a flap card (top or bottom), optionally squashed around the hinge line
+  function flapHalf(x, y, w, h, ch, top, sy, dark) {
+    const my = y + h / 2;
+    ctx.save();
+    ctx.translate(0, my);
+    ctx.scale(1, Math.max(sy, 0.001));
+    ctx.translate(0, -my);
+    ctx.beginPath();
+    if (top) ctx.rect(x - 1, y - 1, w + 2, h / 2 + 1);
+    else ctx.rect(x - 1, my, w + 2, h / 2 + 1);
+    ctx.clip();
+
+    const r = Math.max(3, w * 0.09);
+    const gr = ctx.createLinearGradient(0, y, 0, y + h);
+    gr.addColorStop(0, '#2e2e2e');
+    gr.addColorStop(0.5, '#1d1d1d');
+    gr.addColorStop(0.5, '#161616');
+    gr.addColorStop(1, '#232323');
+    rr(ctx, x, y, w, h, r);
+    ctx.fillStyle = gr;
+    ctx.fill();
+
+    ctx.fillStyle = FLUOR;
+    ctx.font = `700 ${Math.round(h * 0.76)}px ${SANS}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ch, x + w / 2, my + h * 0.03);
+
+    if (dark > 0) {
+      rr(ctx, x, y, w, h, r);
+      ctx.fillStyle = `rgba(0,0,0,${dark})`;
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawFlap(x, y, w, h, f) {
+    const my = y + h / 2;
+    const p = f.dur ? Math.min(1, (frameNow - f.t0) / f.dur) : 1;
+    if (p >= 1) {
+      flapHalf(x, y, w, h, f.cur, true, 1, 0);
+      flapHalf(x, y, w, h, f.cur, false, 1, 0);
+    } else {
+      flapHalf(x, y, w, h, f.cur, true, 1, 0);      // new digit waiting behind, top
+      flapHalf(x, y, w, h, f.prev, false, 1, 0);    // old digit still showing, bottom
+      if (p < 0.5) {                                // old top leaf folds down
+        const s = Math.cos(p * Math.PI);
+        flapHalf(x, y, w, h, f.prev, true, s, (1 - s) * 0.55);
+      } else {                                      // new bottom leaf lands
+        const s = Math.sin((p - 0.5) * Math.PI);
+        flapHalf(x, y, w, h, f.cur, false, s, (1 - s) * 0.55);
+      }
+    }
+    // hinge line and side pins
+    ctx.fillStyle = '#040404';
+    ctx.fillRect(x, my - 0.9, w, 1.8);
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    ctx.fillRect(x, my + 0.9, w, 0.8);
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(x - 1, my - 3.5, 3, 7);
+    ctx.fillRect(x + w - 2, my - 3.5, 3, 7);
+  }
+
+  function paintFlip() {
+    drawPlaque();
+    if (!flaps) return;
+    const bw = 56, bh = 100, bg = 5, mid = 18;          // big flaps: HH MM
+    const total = 4 * bw + 2 * bg + mid;
+    let x = (W - total) / 2;
+    const y = 54;
+    drawFlap(x, y, bw, bh, flaps[0]); x += bw + bg;
+    drawFlap(x, y, bw, bh, flaps[1]); x += bw;
+    const colonX = x + mid / 2; x += mid;
+    drawFlap(x, y, bw, bh, flaps[2]); x += bw + bg;
+    drawFlap(x, y, bw, bh, flaps[3]);
+
+    ctx.fillStyle = FLUOR;                                // colon
+    ctx.fillRect(colonX - 3, y + bh / 2 - 19, 6, 6);
+    ctx.fillRect(colonX - 3, y + bh / 2 + 13, 6, 6);
+
+    const sw = 36, sh = 56, sg = 4;                       // small flaps: seconds
+    const sx = (W - (2 * sw + sg)) / 2;
+    const sy = y + bh + 26;
+    drawFlap(sx, sy, sw, sh, flaps[4]);
+    drawFlap(sx + sw + sg, sy, sw, sh, flaps[5]);
+  }
+
+  /* ----- Digital (seven-segment LED) ----- */
+  const SEGS = { 0: 'abcdef', 1: 'bc', 2: 'abdeg', 3: 'abcdg', 4: 'bcfg', 5: 'acdfg', 6: 'acdefg', 7: 'abc', 8: 'abcdefg', 9: 'abcdfg' };
+
+  function drawDigit7(x, y, w, h, t, ch) {
+    const on = SEGS[ch] || '';
+    const g = 1.6, xl = x + t / 2, xr = x + w - t / 2, yt = y + t / 2, ym = y + h / 2, yb = y + h - t / 2;
+    const Hs = (x0, x1, yc) => [[x0, yc], [x0 + t / 2, yc - t / 2], [x1 - t / 2, yc - t / 2], [x1, yc], [x1 - t / 2, yc + t / 2], [x0 + t / 2, yc + t / 2]];
+    const Vs = (xc, y0, y1) => [[xc, y0], [xc + t / 2, y0 + t / 2], [xc + t / 2, y1 - t / 2], [xc, y1], [xc - t / 2, y1 - t / 2], [xc - t / 2, y0 + t / 2]];
+    const P = {
+      a: Hs(xl + g, xr - g, yt), g: Hs(xl + g, xr - g, ym), d: Hs(xl + g, xr - g, yb),
+      f: Vs(xl, yt + g, ym - g), b: Vs(xr, yt + g, ym - g),
+      e: Vs(xl, ym + g, yb - g), c: Vs(xr, ym + g, yb - g)
+    };
+    'abcdefg'.split('').forEach(k => {
+      const lit = on.indexOf(k) >= 0;
+      ctx.save();
+      ctx.beginPath();
+      P[k].forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]));
+      ctx.closePath();
+      if (lit) {
+        ctx.fillStyle = FLUOR;
+        ctx.shadowColor = FLUOR;
+        ctx.shadowBlur = 9;
+      } else {
+        ctx.fillStyle = rgba(0.07);
+      }
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function paintDigital() {
+    drawPlaque();
+    const d = curDate;
+    const h = pad(d.getHours()), m = pad(d.getMinutes()), s = pad(d.getSeconds());
+
+    // display window
+    rr(ctx, 14, 14, W - 28, H - 28, 14);
+    ctx.fillStyle = '#080808';
+    ctx.fill();
+    ctx.strokeStyle = rgba(0.14);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // weekday indicators
+    const labels = I18N[lang].wd;
+    ctx.font = `400 9px ${SANS}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    labels.forEach((l, i) => {
+      const lx = 44 + i * ((W - 88) / 6);
+      ctx.save();
+      if (i === d.getDay()) { ctx.fillStyle = FLUOR; ctx.shadowColor = FLUOR; ctx.shadowBlur = 8; }
+      else ctx.fillStyle = rgba(0.2);
+      ctx.fillText(l, lx, 40);
+      ctx.restore();
+    });
+
+    // main HH:MM, slightly slanted like an LED module
+    const dw = 50, dh = 98, t = 10, gap = 8, mid = 34;
+    const total = 4 * dw + 2 * gap + mid;
+    let x = (W - total) / 2;
+    const y = 68, yc = y + dh / 2;
+    ctx.save();
+    ctx.translate(0, yc);
+    ctx.transform(1, 0, -0.08, 1, 0, 0);
+    ctx.translate(0, -yc);
+    drawDigit7(x, y, dw, dh, t, h[0]); x += dw + gap;
+    drawDigit7(x, y, dw, dh, t, h[1]); x += dw;
+    const colonX = x + mid / 2; x += mid;
+    drawDigit7(x, y, dw, dh, t, m[0]); x += dw + gap;
+    drawDigit7(x, y, dw, dh, t, m[1]);
+    const blink = d.getMilliseconds() < 500;
+    ctx.save();
+    ctx.fillStyle = blink ? FLUOR : rgba(0.07);
+    if (blink) { ctx.shadowColor = FLUOR; ctx.shadowBlur = 9; }
+    ctx.fillRect(colonX - 4.5, yc - 24, 9, 9);
+    ctx.fillRect(colonX - 4.5, yc + 15, 9, 9);
+    ctx.restore();
+    ctx.restore();
+
+    // seconds
+    const sw = 30, sh = 58, st = 6, sg = 8;
+    const sx = (W - (2 * sw + sg)) / 2, sy = 198;
+    ctx.save();
+    ctx.translate(0, sy + sh / 2);
+    ctx.transform(1, 0, -0.08, 1, 0, 0);
+    ctx.translate(0, -(sy + sh / 2));
+    drawDigit7(sx, sy, sw, sh, st, s[0]);
+    drawDigit7(sx + sw + sg, sy, sw, sh, st, s[1]);
+    ctx.restore();
+  }
+
+  /* ----- Word clock (letter grid, 5-minute steps) ----- */
+  const WG = ['ITLISASTIME', 'ACQUARTERDC', 'TWENTYFIVEX', 'HALFBTENFTO', 'PASTERUNINE',
+              'ONESIXTHREE', 'FOURFIVETWO', 'EIGHTELEVEN', 'SEVENTWELVE', 'TENSEOCLOCK'];
+  const WW = { IT: [0, 0, 2], IS: [0, 3, 2], QUARTER: [1, 2, 7], TWENTY: [2, 0, 6], MFIVE: [2, 6, 4],
+               HALF: [3, 0, 4], MTEN: [3, 5, 3], TO: [3, 9, 2], PAST: [4, 0, 4], OCLOCK: [9, 5, 6] };
+  const WH = [null, [5, 0, 3], [6, 8, 3], [5, 6, 5], [6, 0, 4], [6, 4, 4], [5, 3, 3],
+              [8, 0, 5], [7, 0, 5], [4, 7, 4], [9, 0, 3], [7, 5, 6], [8, 5, 6]];
+  const HNAME = [null, 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+  const WMIN = [[], ['MFIVE'], ['MTEN'], ['QUARTER'], ['TWENTY'], ['TWENTY', 'MFIVE'], ['HALF'],
+                ['TWENTY', 'MFIVE'], ['TWENTY'], ['QUARTER'], ['MTEN'], ['MFIVE']];
+  const WTXT = ['', 'five', 'ten', 'quarter', 'twenty', 'twenty-five', 'half', 'twenty-five', 'twenty', 'quarter', 'ten', 'five'];
+  let wordCache = { key: -1, spec: null };
+
+  // Spanish grid (11 x 11): "SON LAS TRES Y CUARTO", "ES LA UNA EN PUNTO", "... MENOS VEINTICINCO"
+  const WGES = ['SONESLASUNA', 'DOSTRESSEIS', 'CUATROCINCO', 'SIETEOCHORA', 'NUEVEDIEZLO', 'ONCEDOCERYL',
+                'MENOSCINCOT', 'DIEZCUARTOS', 'VEINTICINCO', 'VEINTEMEDIA', 'ENPUNTOLIMA'];
+  const WWES = { SON: [0, 0, 3], ES: [0, 3, 2], LA: [0, 5, 2], LAS: [0, 5, 3], Y: [5, 9, 1], MENOS: [6, 0, 5],
+                 EN: [10, 0, 2], PUNTO: [10, 2, 5], M5: [6, 5, 5], M10: [7, 0, 4], CUARTO: [7, 4, 6],
+                 M25: [8, 0, 11], M20: [9, 0, 6], MEDIA: [9, 6, 5] };
+  const WHES = [null, [0, 8, 3], [1, 0, 3], [1, 3, 4], [2, 0, 6], [2, 6, 5], [1, 7, 4],
+                [3, 0, 5], [3, 5, 4], [4, 0, 5], [4, 5, 4], [5, 0, 4], [5, 4, 4]];
+  const HES = [null, 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce'];
+  const MESK = [null, 'M5', 'M10', 'CUARTO', 'M20', 'M25', 'MEDIA', 'M25', 'M20', 'CUARTO', 'M10', 'M5'];
+  const MEST = [null, 'cinco', 'diez', 'cuarto', 'veinte', 'veinticinco', 'media', 'veinticinco', 'veinte', 'cuarto', 'diez', 'cinco'];
+
+  function wordSpecES(h, b) {
+    const h12 = (b > 6 ? h + 1 : h) % 12 || 12;
+    const lit = new Array(121).fill(false);
+    const mark = w => { for (let i = 0; i < w[2]; i++) lit[w[0] * 11 + w[1] + i] = true; };
+    mark(h12 === 1 ? WWES.ES : WWES.SON);
+    mark(h12 === 1 ? WWES.LA : WWES.LAS);
+    mark(WHES[h12]);
+    let phrase = (h12 === 1 ? 'Es la ' : 'Son las ') + HES[h12];
+    if (b === 0) { mark(WWES.EN); mark(WWES.PUNTO); phrase += ' en punto'; }
+    else { mark(b <= 6 ? WWES.Y : WWES.MENOS); mark(WWES[MESK[b]]); phrase += (b <= 6 ? ' y ' : ' menos ') + MEST[b]; }
+    return { lit, phrase, grid: WGES };
+  }
+
+  // Which letters are lit, plus the sentence they spell ("It is quarter past three")
+  function wordSpec(h, m) {
+    const b = Math.floor(m / 5);
+    const key = lang + (h * 12 + b);
+    if (wordCache.key === key) return wordCache.spec;
+    if (lang === 'es') { wordCache = { key, spec: wordSpecES(h, b) }; return wordCache.spec; }
+    const keys = ['IT', 'IS'];
+    if (b === 0) keys.push('OCLOCK');
+    else { WMIN[b].forEach(k => keys.push(k)); keys.push(b <= 6 ? 'PAST' : 'TO'); }
+    const h12 = (b > 6 ? h + 1 : h) % 12 || 12;
+    const lit = new Array(110).fill(false);
+    const mark = w => { for (let i = 0; i < w[2]; i++) lit[w[0] * 11 + w[1] + i] = true; };
+    keys.forEach(k => mark(WW[k]));
+    mark(WH[h12]);
+    const phrase = b === 0
+      ? `It is ${HNAME[h12]} o'clock`
+      : `It is ${WTXT[b]} ${b <= 6 ? 'past' : 'to'} ${HNAME[h12]}`;
+    wordCache = { key, spec: { lit, phrase, grid: WG } };
+    return wordCache.spec;
+  }
+
+  function paintWord() {
+    drawPlaque();
+    const d = curDate;
+    const spec = wordSpec(d.getHours(), d.getMinutes());
+    const G = spec.grid, rows = G.length;
+    const cw = 23, chh = rows > 10 ? 23 : 25, x0 = (W - 11 * cw) / 2, y0 = (H - rows * chh) / 2;
+    ctx.font = `600 15px ${SANS}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < 11; c++) {
+        ctx.save();
+        if (spec.lit[r * 11 + c]) { ctx.fillStyle = FLUOR; ctx.shadowColor = FLUOR; ctx.shadowBlur = 8; }
+        else ctx.fillStyle = rgba(0.12);
+        ctx.fillText(G[r][c], x0 + c * cw + cw / 2, y0 + r * chh + chh / 2 + 1);
+        ctx.restore();
+      }
+    }
+    // four corner dots count the minutes between the 5-minute steps
+    const extra = d.getMinutes() % 5;
+    [[15, 15], [W - 15, 15], [W - 15, H - 15], [15, H - 15]].forEach((p, i) => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2);
+      if (i < extra) { ctx.fillStyle = FLUOR; ctx.shadowColor = FLUOR; ctx.shadowBlur = 8; }
+      else ctx.fillStyle = rgba(0.12);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  /* ---------- World clock row (follows the virtual clock: speed, back, reset) ---------- */
+  const CITIES = [
+    ['Madrid', 'Europe/Madrid'], ['London', 'Europe/London'], ['New York', 'America/New_York'],
+    ['Buenos Aires', 'America/Argentina/Buenos_Aires'], ['Tokyo', 'Asia/Tokyo'], ['Sydney', 'Australia/Sydney']
+  ];
+  const worldEl = document.getElementById('world');
+  const btnWorld = document.getElementById('btnWorld');
+  let worldOn = true;
+  let lastWorldKey = -1;
+  let worldFmt = [];
+  const worldCells = [];
+  try { worldOn = localStorage.getItem('braunWorld') !== 'off'; } catch (e) {}
+  try {
+    worldFmt = CITIES.map(c => new Intl.DateTimeFormat('en-GB', {
+      timeZone: c[1], hourCycle: 'h23', hour: '2-digit', minute: '2-digit',
+      year: 'numeric', month: 'numeric', day: 'numeric'
+    }));
+    CITIES.forEach((c, ci) => {
+      const el = document.createElement('div');
+      el.className = 'wc';
+      el.innerHTML = '<div class="wc-city"></div><div class="wc-time"></div><div class="wc-day"></div>';
+      el.children[0].textContent = c[0];
+      el.children[0].dataset.code = ({ 'New York': 'NYC', 'Buenos Aires': 'BUE', 'Tokyo': 'TYO' })[c[0]] || c[0].slice(0, 3).toUpperCase();
+      document.getElementById(ci < 3 ? 'worldL' : 'worldR').appendChild(el);   // 3 cities per side
+      worldCells.push({ name: el.children[0], time: el.children[1], day: el.children[2] });
+    });
+  } catch (e) { worldFmt = []; btnWorld.hidden = true; worldEl.hidden = true; }
+
+  function syncWorld() {
+    btnWorld.textContent = worldOn ? t('worldOn') : t('worldOff');
+    btnWorld.classList.toggle('active', worldOn);
+    btnWorld.setAttribute('aria-pressed', worldOn ? 'true' : 'false');
+    if (worldFmt.length) worldEl.hidden = !worldOn;
+  }
+
+  function updateWorld(d) {
+    if (!worldOn || !worldFmt.length) return;
+    const k = Math.floor(virtualTime / 1000);
+    if (k === lastWorldKey) return;
+    lastWorldKey = k;
+    const base = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+    worldFmt.forEach((f, i) => {
+      const p = {};
+      f.formatToParts(d).forEach(x => { p[x.type] = x.value; });
+      const diff = Math.round((Date.UTC(+p.year, +p.month - 1, +p.day) - base) / 864e5);
+      const tm = p.hour + ':' + p.minute;
+      const lbl = diff > 0 ? '+' + diff + ' ' + t('dayWord') : diff < 0 ? '\u2212' + Math.abs(diff) + ' ' + t('dayWord') : '';
+      const c = worldCells[i];
+      if (c.time.textContent !== tm) c.time.textContent = tm;
+      if (c.day.textContent !== lbl) c.day.textContent = lbl;
+    });
+  }
+
+  btnWorld.addEventListener('click', () => {
+    worldOn = !worldOn;
+    lastWorldKey = -1;
+    try { localStorage.setItem('braunWorld', worldOn ? 'on' : 'off'); } catch (e) {}
+    syncWorld();
+  });
+  syncWorld();
+
+  /* ----- Pendulum / metronome: swings once per 2 s, ticks on every second at the extremes ----- */
+  let tickOn = true;
+  let lastTickSec = null;
+  let tickFlash = null;
+  try { tickOn = localStorage.getItem('braunTick') !== 'off'; } catch (e) {}
+
+  function syncTickBtn() {
+    const tb = document.getElementById('btnTick');
+    if (!tb) return;
+    tb.textContent = tickOn ? t('tickOn') : t('tickOff');
+    tb.classList.toggle('active', tickOn);
+  }
+
+  // Soft wooden click; "tick" and "tock" differ slightly in pitch
+  function playTick(side) {
+    if (!audioCtx || audioCtx.state !== 'running') return;
+    const t0 = audioCtx.currentTime + 0.005;
+    const f = side > 0 ? 1500 : 1050;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(f, t0);
+    o.frequency.exponentialRampToValueAtTime(f * 0.55, t0 + 0.05);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.07);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t0); o.stop(t0 + 0.09);
+  }
+
+  // Fires when the (virtual) clock crosses a whole second; only at normal-ish speed
+  function checkTick(dt) {
+    const sec = Math.floor(virtualTime / 1000);
+    const prev = lastTickSec;
+    lastTickSec = sec;
+    if (prev === null || prev === sec || model !== 'pendulum') return;
+    if (Math.abs(speed) > 2 || dt > 1500 || Math.abs(sec - prev) > 2) return;
+    const side = ((sec % 2) + 2) % 2 === 0 ? 1 : -1;     // cos(pi*t) is +1 on even seconds
+    tickFlash = { t0: frameNow, side };
+    if (tickOn) playTick(side);
+  }
+
+  function paintPendulum() {
+    drawPlaque();
+    const A = 24 * Math.PI / 180, L = 178, px = cx, py = 34;
+    // Normal speed: locked to the clock's seconds. Fast-forward: swing at a steady pace instead of a blur
+    const tt = Math.abs(speed) <= 2 ? virtualTime / 1000 : frameNow / 1000;
+    const th = A * Math.cos(Math.PI * tt);
+
+    // arc guide and centre mark
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = rgba(0.12);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(px, py, L, Math.PI / 2 - A - 0.1, Math.PI / 2 + A + 0.1);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px, py + L - 12);
+    ctx.lineTo(px, py + L + 12);
+    ctx.stroke();
+
+    // extreme markers; the one just reached flashes with the tick
+    [-1, 1].forEach(s => {
+      const a = s * A;
+      let k = 0;
+      if (tickFlash && tickFlash.side === s) k = Math.max(0, 1 - (frameNow - tickFlash.t0) / 260);
+      ctx.beginPath();
+      ctx.moveTo(px + Math.sin(a) * (L - 15), py + Math.cos(a) * (L - 15));
+      ctx.lineTo(px + Math.sin(a) * (L + 15), py + Math.cos(a) * (L + 15));
+      ctx.strokeStyle = k > 0 ? FLUOR : rgba(0.3);
+      ctx.lineWidth = k > 0 ? 2.5 : 1.5;
+      if (k > 0) { ctx.shadowColor = FLUOR; ctx.shadowBlur = 14 * k; }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    });
+    ctx.restore();
+
+    // rod and bob
+    const bx = px + Math.sin(th) * L, by = py + Math.cos(th) * L;
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(bx, by);
+    ctx.strokeStyle = FLUOR;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = FLUOR;
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(bx, by, 17, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(0.16);
+    ctx.fill();
+    ctx.shadowColor = FLUOR;
+    ctx.shadowBlur = 10;
+    ctx.strokeStyle = FLUOR;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(bx, by, 5, 0, Math.PI * 2);
+    ctx.fillStyle = FLUOR;
+    ctx.fill();
+    // pivot
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // small time under the swing
+    const d = curDate;
+    ctx.fillStyle = rgba(0.85);
+    ctx.font = `300 20px ${SANS}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(pad(d.getHours()) + ':' + pad(d.getMinutes()), cx, 268);
+  }
+
+  document.getElementById('btnTick').addEventListener('click', () => {
+    unlockAudio();
+    tickOn = !tickOn;
+    try { localStorage.setItem('braunTick', tickOn ? 'on' : 'off'); } catch (e) {}
+    syncTickBtn();
+  });
+
+  // Model buttons
+  document.querySelectorAll('.model-btn').forEach(b =>
+    b.addEventListener('click', () => setModel(b.dataset.model)));
+  let savedModel = 'analog';
+  try { savedModel = localStorage.getItem('braunClockModel') || 'analog'; } catch (e) {}
+  setModel(savedModel);
+
+  /* ---------- Cuckoo: every hour (one call per hour) and once on the half-hour ---------- */
+  const cuckooEl = document.getElementById('cuckoo');
+  const soundBtn = document.getElementById('cuckooSound');
+  let cuckooBusy = false;
+  let lastBucket = null;        // { key, h, half } of the half-hour slot the clock is in
+  let lastVT = null;
+  let cuckooOn = true;          // off = no sound and the bird stays inside
+  let cuckooTimers = [];
+  let audioCtx = null;
+  let CALL_GAP = 1000;       // ms between calls
+
+  try { cuckooOn = localStorage.getItem('braunCuckoo') !== 'off'; } catch (e) {}
+  function syncSoundBtn() {
+    soundBtn.textContent = cuckooOn ? t('cuckooOn') : t('cuckooOff');
+    soundBtn.classList.toggle('active', cuckooOn);
+    cuckooEl.style.opacity = cuckooOn ? '' : '0.4';
+  }
+  syncSoundBtn();
+
+  // Browsers only allow audio after a tap, so the first interaction unlocks it
+  function unlockAudio() {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch (e) {}
+  }
+  ['pointerdown', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, unlockAudio, { passive: true }));
+
+  // One "cuck-oo": a falling minor third, soft sine with a little overtone
+  function playCuckooCall() {
+    if (!cuckooOn || !audioCtx || audioCtx.state !== 'running') return;
+    const t = audioCtx.currentTime + 0.02;
+    const note = (f0, f1, start, dur) => {
+      [[1, 0.5], [2, 0.12]].forEach(([mul, vol]) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f0 * mul, t + start);
+        o.frequency.exponentialRampToValueAtTime(f1 * mul, t + start + dur);
+        g.gain.setValueAtTime(0.0001, t + start);
+        g.gain.exponentialRampToValueAtTime(vol, t + start + 0.025);
+        g.gain.setValueAtTime(vol, t + start + dur * 0.55);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + start + dur);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(t + start); o.stop(t + start + dur + 0.05);
+      });
+    };
+    note(884, 872, 0, 0.2);        // cuck
+    note(742, 730, 0.26, 0.36);    // -oo
+  }
+
+  function later(fn, ms) { cuckooTimers.push(setTimeout(fn, ms)); }
+
+  function singCall() {
+    playCuckooCall();
+    cuckooEl.classList.add('calling', 'open');
+    later(() => cuckooEl.classList.remove('open'), 200);
+    later(() => cuckooEl.classList.add('open'), 260);
+    later(() => cuckooEl.classList.remove('open'), 620);
+  }
+
+  function runCuckoo(count) {
+    if (!cuckooOn || cuckooBusy) return;
+    cuckooBusy = true;
+    CALL_GAP = speed > 8 ? 700 : 1000;                    // quicker calls when time is racing
+    cuckooEl.classList.add('ajar');                       // doors open
+    later(() => cuckooEl.classList.add('out'), 300);      // bird pops out
+    for (let i = 0; i < count; i++) later(singCall, 800 + i * CALL_GAP);
+    later(() => {
+      cuckooEl.classList.remove('calling', 'open');
+      cuckooEl.classList.remove('out');                   // bird goes back in
+      later(() => { cuckooEl.classList.remove('ajar'); cuckooBusy = false; }, 600);
+    }, 800 + (count - 1) * CALL_GAP + 900);
+  }
+
+  // Switching off mid-call: stop everything and tuck the bird away at once
+  function cancelCuckoo() {
+    cuckooTimers.forEach(clearTimeout);
+    cuckooTimers = [];
+    cuckooEl.classList.remove('calling', 'open', 'out');
+    setTimeout(() => cuckooEl.classList.remove('ajar'), 450);
+    cuckooBusy = false;
+  }
+
+  // Watches the (virtual) clock and fires when it crosses :00 or :30
+  function checkCuckoo(d, dt) {
+    const half = d.getMinutes() >= 30 ? 1 : 0;
+    const key = (d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate()) * 100 + d.getHours() * 2 + half;
+    const cur = { key, h: d.getHours(), half };
+    const prev = lastBucket;
+    lastBucket = cur;
+    const step = Math.abs(virtualTime - lastVT);
+    const jumped = lastVT !== null && step > dt * speed + 1500;   // Reset / manual time change
+    lastVT = virtualTime;
+    if (!prev || prev.key === key || jumped) return;
+    // Works at any speed now; only skip the big gap when a hidden tab wakes up again
+    if (dt > 1500) return;
+    // moving forward the boundary we crossed starts the new slot; in reverse it starts the old one
+    const hit = direction > 0 ? cur : prev;
+    runCuckoo(hit.half ? 1 : (hit.h % 12 || 12));
+  }
+
+  cuckooEl.addEventListener('click', () => { unlockAudio(); runCuckoo(1); });   // tap the house for a sample call
+  soundBtn.addEventListener('click', () => {
+    unlockAudio();
+    cuckooOn = !cuckooOn;
+    if (!cuckooOn) cancelCuckoo();
+    try { localStorage.setItem('braunCuckoo', cuckooOn ? 'on' : 'off'); } catch (e) {}
+    syncSoundBtn();
+  });
+
+  /* ---------- Speak the time (clock-aligned: every N minutes counted from midnight) ---------- */
+  const speakDd = document.getElementById('speakDd');
+  const btnSpeak = document.getElementById('btnSpeak');
+  const speakMenu = document.getElementById('speakMenu');
+  const speakOpts = speakMenu.querySelectorAll('.speak-opt');
+  const hasVoice = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+  let speakOn = false;
+  let speakEvery = 15;
+  let lastSpeak = null;     // { key, t0 } bucket of the clock
+  let lastSpeakVT = null;
+
+  if (!hasVoice) speakDd.hidden = true;
+  try {
+    const v = parseInt(localStorage.getItem('braunSpeakEvery'), 10);
+    if ([1, 5, 10, 15, 20, 30, 45, 60].indexOf(v) >= 0) speakEvery = v;
+  } catch (e) {}
+
+  function syncSpeakUI() {
+    btnSpeak.textContent = speakOn ? I18N[lang].speakN(speakEvery) : t('speakOff');
+    btnSpeak.classList.toggle('active', speakOn);
+    speakOpts.forEach(o => {
+      const m = parseInt(o.dataset.min, 10);
+      const on = speakOn ? m === speakEvery : m === 0;
+      o.classList.toggle('active', on);
+      o.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+  }
+
+  function openSpeakMenu(open) {
+    speakMenu.hidden = !open;
+    btnSpeak.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function timePhrase(h, m) {
+    if (lang === 'es') {
+      if (m === 0 && h === 0) return 'Es medianoche.';
+      if (m === 0 && h === 12) return 'Es mediodía.';
+      if (model === 'word') return wordSpec(h, m).phrase + '.';
+      const h12e = h % 12 || 12, art = h12e === 1 ? 'Es la ' : 'Son las ';
+      const per = h < 6 ? 'de la madrugada' : h < 12 ? 'de la mañana' : h < 20 ? 'de la tarde' : 'de la noche';
+      return m === 0 ? `${art}${h12e} en punto ${per}.` : `${art}${h12e} y ${m} ${per}.`;
+    }
+    if (m === 0 && h === 0) return "It's midnight.";
+    if (m === 0 && h === 12) return "It's noon.";
+    if (model === 'word') return wordSpec(h, m).phrase + '.';   // same wording as the letter grid
+    const ap = h < 12 ? 'AM' : 'PM', h12 = h % 12 || 12;
+    return m === 0 ? `It's ${h12} ${ap}.` : `It's ${h12}:${pad(m)} ${ap}.`;
+  }
+
+  function say(text) {
+    if (!hasVoice) return;
+    try {
+      if (speechSynthesis.speaking) speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang === 'es' ? 'es-ES' : 'en-US';
+      u.rate = 0.95;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  // Wait for the cuckoo to finish its calls so the two never talk over each other
+  function sayWhenFree(text, tries) {
+    if (!speakOn) return;
+    if (cuckooBusy && (tries || 0) < 60) { setTimeout(() => sayWhenFree(text, (tries || 0) + 1), 700); return; }
+    say(text);
+  }
+
+  function checkSpeak(d, dt) {
+    const t = d.getHours() * 60 + d.getMinutes();
+    const key = (d.getFullYear() * 10000 + d.getMonth() * 100 + d.getDate()) * 2000 + Math.floor(t / speakEvery);
+    const cur = { key, t0: Math.floor(t / speakEvery) * speakEvery };
+    const prev = lastSpeak;
+    lastSpeak = cur;
+    const step = Math.abs(virtualTime - lastSpeakVT);
+    const jumped = lastSpeakVT !== null && step > dt * speed + 1500;
+    lastSpeakVT = virtualTime;
+    if (!speakOn || !prev || prev.key === key || jumped) return;
+    if (dt > 1500) return;                       // tab was hidden: no catch-up speech
+    if (speed > 8) {
+      // Fast-forward: say the time as it is right now, never queue or cut off a phrase,
+      // and don't wait for the cuckoo (they simply overlap)
+      if (hasVoice && !speechSynthesis.speaking) say(timePhrase(d.getHours(), d.getMinutes()));
+      return;
+    }
+    const hit = direction > 0 ? cur : prev;      // forward: the new slot starts here; reverse: the old one did
+    sayWhenFree(timePhrase(Math.floor(hit.t0 / 60), hit.t0 % 60));
+  }
+
+  btnSpeak.addEventListener('click', e => { e.stopPropagation(); openSpeakMenu(speakMenu.hidden); });
+  speakOpts.forEach(o => o.addEventListener('click', e => {
+    e.stopPropagation();
+    const m = parseInt(o.dataset.min, 10);
+    const wasOn = speakOn;
+    if (m === 0) {
+      speakOn = false;
+      if (hasVoice) { try { speechSynthesis.cancel(); } catch (err) {} }
+    } else {
+      speakEvery = m;
+      speakOn = true;
+      try { localStorage.setItem('braunSpeakEvery', String(m)); } catch (err) {}
+      if (!wasOn) {                                   // tap = permission to speak + instant sample
+        const d = new Date(virtualTime);
+        say(timePhrase(d.getHours(), d.getMinutes()));
+      }
+    }
+    lastSpeak = null;
+    syncSpeakUI();
+    openSpeakMenu(false);
+    btnSpeak.focus({ preventScroll: true });
+  }));
+  document.addEventListener('click', e => { if (!speakDd.contains(e.target)) openSpeakMenu(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') openSpeakMenu(false); });
+  syncSpeakUI();
+
+  /* ---------- Keep screen awake ---------- */
+  const btnAwake = document.getElementById('btnAwake');
+  let awakeOn = false;
+  let awakeLock = null;
+  if (!(navigator.wakeLock && navigator.wakeLock.request)) btnAwake.hidden = true;
+  try { awakeOn = localStorage.getItem('braunAwake') === 'on'; } catch (e) {}
+
+  function syncAwakeBtn() {
+    btnAwake.textContent = awakeOn ? t('awakeOn') : t('awakeOff');
+    btnAwake.classList.toggle('active', awakeOn);
+    btnAwake.setAttribute('aria-pressed', awakeOn ? 'true' : 'false');
+  }
+  async function acquireAwake() {
+    if (!awakeOn || awakeLock || !navigator.wakeLock || document.visibilityState !== 'visible') return;
+    try {
+      awakeLock = await navigator.wakeLock.request('screen');
+      awakeLock.addEventListener('release', () => { awakeLock = null; });
+    } catch (e) { awakeLock = null; }
+  }
+  function releaseAwake() {
+    if (awakeLock) { awakeLock.release().catch(() => {}); awakeLock = null; }
+  }
+  btnAwake.addEventListener('click', async () => {
+    awakeOn = !awakeOn;
+    if (awakeOn) {
+      await acquireAwake();
+      if (!awakeLock) {                                   // refused (needs https, or the browser said no)
+        awakeOn = false;
+        btnAwake.textContent = t('notAllowed');
+        setTimeout(syncAwakeBtn, 2200);
+        return;
+      }
+    } else {
+      releaseAwake();
+    }
+    try { localStorage.setItem('braunAwake', awakeOn ? 'on' : 'off'); } catch (e) {}
+    syncAwakeBtn();
+  });
+  // The browser drops the lock when the tab is hidden: take it back on return
+  document.addEventListener('visibilitychange', acquireAwake);
+  // A remembered "on" is re-armed by the first tap on the page
+  window.addEventListener('pointerdown', acquireAwake, { once: true, passive: true });
+  acquireAwake();
+  syncAwakeBtn();
+
+  /* ---------- AR wall view (camera + motion sensors) ----------
+     The camera feed is the background; the clock is a flat panel pinned to a fixed
+     direction in space, so it stays on the wall as you move the phone. */
+  const AR_K = 740 / 296;
+  const AR_DIST = 1000;               // virtual distance in px-units
+  const D2R = Math.PI / 180;
+  const arEl = document.getElementById('ar');
+  const arVideo = document.getElementById('arVideo');
+  const arStage = document.getElementById('arStage');
+  const arPlane = document.getElementById('arPlane');
+  const arCtx = document.getElementById('arCanvas').getContext('2d');
+  const arAbout = document.getElementById('arAbout');
+  const arCuckoo = document.getElementById('arCuckoo');
+  const btnAR = document.getElementById('btnAR');
+  let arActive = false, arStream = null, arWake = null, arF = 700;
+  let ori = null, needPlace = true, az = 0, pitch = 0, sc = 1, arLocked = false, fadeIdx = 0;
+  const FADES = [1, 0.7, 0.4];
+
+  // Only offer AR on touch devices with a camera
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.matchMedia('(pointer: coarse)').matches) {
+    btnAR.hidden = false;
+  }
+
+  function setF() {
+    arF = 0.866 * window.innerHeight;     // ~60° vertical field of view of the iPhone camera
+    arStage.style.perspective = arF + 'px';
+  }
+  window.addEventListener('resize', () => { if (arActive) setF(); });
+
+  window.addEventListener('deviceorientation', e => {
+    if (e.beta === null || e.beta === undefined) return;
+    ori = [e.alpha || 0, e.beta, e.gamma || 0];
+  });
+
+  // Rotation matrix device -> world (W3C order Z-X'-Y''), row-major
+  function rotM(o) {
+    const a = o[0] * D2R, b = o[1] * D2R, g = o[2] * D2R;
+    const ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b), cg = Math.cos(g), sg = Math.sin(g);
+    return [
+      ca*cg - sa*sb*sg, -cb*sa, ca*sg + cg*sa*sb,
+      cg*sa + ca*sb*sg,  ca*cb, sa*sg - ca*cg*sb,
+      -cb*sg,            sb,    cb*cg
+    ];
+  }
+
+  async function startAR() {
+    try {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        const r = await DeviceOrientationEvent.requestPermission();
+        if (r !== 'granted') { alert(t('alertMotion')); return; }
+      }
+      arStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    } catch (err) {
+      alert(t('alertAR') +((err && err.message) || err));
+      return;
+    }
+    arVideo.srcObject = arStream;
+    arVideo.play().catch(() => {});
+    arEl.hidden = false;
+    arActive = true;
+    needPlace = true;
+    setF();
+    const hint = document.getElementById('arHint');
+    hint.style.opacity = 1;
+    setTimeout(() => { hint.style.opacity = 0; }, 5000);
+    try { if (navigator.wakeLock) arWake = await navigator.wakeLock.request('screen'); } catch (e) {}
+  }
+
+  function stopAR() {
+    arActive = false;
+    if (arStream) arStream.getTracks().forEach(t => t.stop());
+    arStream = null;
+    arVideo.srcObject = null;
+    if (arWake) { arWake.release().catch(() => {}); arWake = null; }
+    arEl.hidden = true;
+  }
+
+  function arTick() {
+    if (!ori) return;
+    const R3 = rotM(ori);
+    if (needPlace) {                       // pin the clock where the camera is pointing now
+      const fx = -R3[2], fy = -R3[5], fz = -R3[8];
+      az = Math.atan2(fy, fx);
+      pitch = Math.max(-0.6, Math.min(0.6, Math.asin(Math.max(-1, Math.min(1, fz)))));
+      needPlace = false;
+    }
+    // text on the wall mirrors the main page
+    document.getElementById('arBrand').textContent = brandEl.textContent;
+    document.getElementById('arBrand').style.opacity = brandEl.classList.contains('fade') ? 0 : 1;
+    document.getElementById('arTime').textContent = digitalEl.textContent + (statusEl.textContent ? '  ' + statusEl.textContent : '');
+    document.getElementById('arDate').textContent = dateEl.textContent;
+    // cuckoo on the wall mirrors the one on the page
+    const cn = 'cuckoo ar-cuckoo' + ['out', 'ajar', 'calling', 'open'].filter(c => cuckooEl.classList.contains(c)).map(c => ' ' + c).join('');
+    if (arCuckoo.className !== cn) arCuckoo.className = cn;
+    arCuckoo.style.opacity = cuckooOn ? '' : '0.4';
+    document.querySelectorAll('.ar-bottom .btn').forEach(b => {
+      const src = document.getElementById(b.dataset.for);
+      b.textContent = src.textContent;
+      b.classList.toggle('active', src.classList.contains('active'));
+    });
+    const showAbout = aboutEl.classList.contains('show');
+    arAbout.classList.toggle('show', showAbout);
+    if (showAbout) arAbout.textContent = aboutText.textContent;
+
+    // vertical wall panel facing the viewer, placed at (az, pitch)
+    const cp = Math.cos(pitch);
+    const C = [AR_DIST * cp * Math.cos(az), AR_DIST * cp * Math.sin(az), AR_DIST * Math.sin(pitch)];
+    const U = [Math.sin(az), -Math.cos(az), 0], V = [0, 0, 1], N = [-Math.cos(az), -Math.sin(az), 0];
+    const T = v => [
+      R3[0]*v[0] + R3[3]*v[1] + R3[6]*v[2],
+      R3[1]*v[0] + R3[4]*v[1] + R3[7]*v[2],
+      R3[2]*v[0] + R3[5]*v[1] + R3[8]*v[2]
+    ];
+    const u = T(U), v = T(V), n = T(N), c = T(C);
+    if (c[2] > -30) { arM = null; arPlane.style.visibility = 'hidden'; return; }   // behind the camera
+    arPlane.style.visibility = 'visible';
+    arM = { c0: [u[0]*sc, -u[1]*sc, u[2]*sc], c1: [-v[0]*sc, v[1]*sc, -v[2]*sc], c3: [c[0], -c[1], c[2] + arF] };
+    const f = x => x.toFixed(5);
+    arPlane.style.transform = `matrix3d(${f(u[0]*sc)},${f(-u[1]*sc)},${f(u[2]*sc)},0,` +
+      `${f(-v[0]*sc)},${f(v[1]*sc)},${f(-v[2]*sc)},0,` +
+      `${f(n[0])},${f(-n[1])},${f(n[2])},0,` +
+      `${f(c[0])},${f(-c[1])},${f(c[2] + arF)},1)`;
+  }
+
+  // Gestures: drag moves the clock along the wall, pinch resizes it
+  let tp = null;
+  const pts = e => {
+    const t = e.touches;
+    return { n: t.length, x: t[0].clientX, y: t[0].clientY,
+             d: t.length > 1 ? Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) : 0 };
+  };
+  arEl.addEventListener('touchstart', e => {
+    if (e.target.closest('button')) return;
+    e.preventDefault();
+    tp = pts(e);
+  }, { passive: false });
+  arEl.addEventListener('touchmove', e => {
+    if (!tp || arLocked || e.target.closest('button')) return;
+    e.preventDefault();
+    const q = pts(e);
+    if (q.n === 1 && tp.n === 1) {
+      az -= (q.x - tp.x) / arF / Math.max(0.3, Math.cos(pitch));
+      pitch = Math.max(-1.0, Math.min(1.0, pitch - (q.y - tp.y) / arF));
+    } else if (q.n === 2 && tp.n === 2 && tp.d > 0) {
+      sc = Math.max(0.25, Math.min(5, sc * q.d / tp.d));
+    }
+    tp = q;
+  }, { passive: false });
+  arEl.addEventListener('touchend', e => { tp = e.touches.length ? pts(e) : null; });
+
+  /* ---------- Photo: camera frame + clock, saved or shared ---------- */
+  let arM = null;
+  // Draws the cuckoo house (above the brand name) into the photo texture,
+  // reading the live animation state from the AR copy so the photo matches the screen
+  function drawCuckooTex(g, rgb) {
+    const mat = el => { const t = getComputedStyle(el).transform; try { return t && t !== 'none' ? new DOMMatrix(t) : new DOMMatrix(); } catch (e) { return new DOMMatrix(); } };
+    const birdEl = arCuckoo.querySelector('.cuckoo-bird');
+    const bm = mat(birdEl);
+    const lm = mat(arCuckoo.querySelector('.cuckoo-door.l'));
+    const rm = mat(arCuckoo.querySelector('.cuckoo-door.r'));
+    const bk = mat(arCuckoo.querySelector('.beak-low'));
+    const beakAng = Math.atan2(bk.b, bk.a);
+    const fluor = `rgb(${rgb})`;
+    const X = 118, Y = -143, Wd = 84, Ht = 70;                 // house, in wall-plane units
+    const arch = (x, y, w, h, rt, rb) => {
+      g.beginPath();
+      g.moveTo(x, y + rt);
+      g.arc(x + rt, y + rt, rt, Math.PI, 0);
+      g.lineTo(x + w, y + h - rb);
+      g.arcTo(x + w, y + h, x + w - rb, y + h, rb);
+      g.lineTo(x + rb, y + h);
+      g.arcTo(x, y + h, x, y + h - rb, rb);
+      g.closePath();
+    };
+    g.save();
+    if (!cuckooOn) g.globalAlpha = 0.4;
+    arch(X, Y, Wd, Ht, 42, 5);
+    g.fillStyle = '#050505'; g.fill();
+
+    g.save();
+    arch(X + 1, Y + 1, Wd - 2, Ht - 2, 41, 4);
+    g.clip();
+    // bird (same box and transform as the CSS version: 58x54 box, 3px above the floor)
+    const bl = X + 1 + (82 - 58) / 2, bb = Y + Ht - 1 - 3, bt = bb - 54;
+    g.save();
+    g.translate(bl + 29, bb);
+    g.transform(bm.a, bm.b, bm.c, bm.d, bm.e, bm.f);
+    g.translate(-(bl + 29), -bb);
+    g.translate(bl + 0.2, bt);
+    g.scale(0.9, 0.9);
+    g.fillStyle = fluor; g.strokeStyle = fluor;
+    g.fill(new Path2D('M4 47 L20 34 L25 47 Z'));
+    g.beginPath(); g.ellipse(30, 40, 18, 11, -12 * Math.PI / 180, 0, Math.PI * 2); g.fill();
+    g.fill(new Path2D('M36 38 L48 29 L52 38 Z'));
+    g.beginPath(); g.arc(46, 26, 8, 0, Math.PI * 2); g.fill();
+    g.fill(new Path2D('M53 23 L63 26.5 L53 28 Z'));
+    g.save(); g.translate(53, 28); g.rotate(beakAng); g.translate(-53, -28);
+    g.fill(new Path2D('M53 28 L61 30.5 L53 32 Z')); g.restore();
+    g.fillStyle = '#0c0c0c'; g.beginPath(); g.arc(48, 24.5, 1.7, 0, Math.PI * 2); g.fill();
+    g.save(); g.globalAlpha *= 0.7; g.strokeStyle = '#0c0c0c'; g.lineWidth = 1.6; g.lineCap = 'round';
+    g.stroke(new Path2D('M22 42 Q31 33 41 41')); g.restore();
+    g.strokeStyle = fluor; g.lineWidth = 2; g.lineCap = 'round';
+    g.stroke(new Path2D('M30 50 V57 M37 50 V57'));
+    g.restore();
+    // floor
+    g.fillStyle = '#1a1a1a'; g.fillRect(X + 1, Y + Ht - 1 - 6, 82, 6);
+    g.fillStyle = `rgba(${rgb},.25)`; g.fillRect(X + 1, Y + Ht - 1 - 6, 82, 1);
+    // doors (scaleX from their outer edge)
+    const dh = Ht - 2, dy = Y + 1;
+    g.fillStyle = '#171717';
+    g.fillRect(X + 1, dy, 41 * lm.a, dh);
+    g.fillRect(X + 83 - 41 * rm.a, dy, 41 * rm.a, dh);
+    g.fillStyle = `rgba(${rgb},.35)`;
+    if (lm.a > 0.05) g.fillRect(X + 1 + 41 * lm.a - 1, dy, 1, dh);
+    if (rm.a > 0.05) g.fillRect(X + 83 - 41 * rm.a, dy, 1, dh);
+    g.restore();
+
+    arch(X + 0.5, Y + 0.5, Wd - 1, Ht - 1, 41.5, 4.5);
+    g.strokeStyle = `rgba(${rgb},.45)`; g.lineWidth = 1; g.stroke();
+    g.restore();
+  }
+
+  function buildTex() {
+    const k = 2.3, X0 = -110, Y0 = -180, SW = 540, SH = 610;
+    const t = document.createElement('canvas');
+    t.width = Math.round(SW * k); t.height = Math.round(SH * k);
+    const g = t.getContext('2d');
+    g.scale(k, k); g.translate(-X0, -Y0);
+    const rgb = COLORS[colorIndex].join(',');
+    const hg = g.createRadialGradient(160, 160, 0, 160, 160, 382);
+    hg.addColorStop(0, `rgba(${rgb},.22)`); hg.addColorStop(0.68, `rgba(${rgb},0)`);
+    g.fillStyle = hg; g.fillRect(X0, Y0, SW, SH);
+    g.save();
+    const bg = g.createRadialGradient(112, 96, 0, 112, 96, 300);
+    bg.addColorStop(0, '#2c2c2c'); bg.addColorStop(0.4, '#111'); bg.addColorStop(1, '#0d0d0d');
+    g.shadowColor = 'rgba(0,0,0,.85)'; g.shadowBlur = 40; g.shadowOffsetY = 8;
+    if (model === 'analog') { g.beginPath(); g.arc(160, 160, 160, 0, Math.PI * 2); } else { rr(g, 0, 0, 320, 320, 34); }
+    g.fillStyle = bg; g.fill();
+    g.restore();
+    g.drawImage(document.getElementById('arCanvas'), 12, 12, 296, 296);
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.font = "26px BraunLogo, Helvetica, Arial, sans-serif";
+    g.fillStyle = `rgba(${rgb},.6)`; g.fillText(brandEl.textContent.toUpperCase(), 160, -32);
+    g.font = "300 20px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    g.fillStyle = `rgba(${rgb},.85)`;
+    g.fillText(digitalEl.textContent + (statusEl.textContent ? '  ' + statusEl.textContent : ''), 160, 366);
+    g.font = "300 11px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    g.fillStyle = `rgba(${rgb},.6)`; g.fillText(dateEl.textContent.toUpperCase(), 160, 395);
+    drawCuckooTex(g, rgb);
+    return t;
+  }
+
+  // Draw one textured triangle (affine map source -> destination)
+  function tri(g, img, s, d) {
+    const [s0, s1, s2] = s, [d0, d1, d2] = d;
+    const den = (s1[0]-s0[0])*(s2[1]-s0[1]) - (s2[0]-s0[0])*(s1[1]-s0[1]);
+    if (!den) return;
+    const a  = ((d1[0]-d0[0])*(s2[1]-s0[1]) - (d2[0]-d0[0])*(s1[1]-s0[1])) / den;
+    const b  = ((d1[1]-d0[1])*(s2[1]-s0[1]) - (d2[1]-d0[1])*(s1[1]-s0[1])) / den;
+    const c  = ((s1[0]-s0[0])*(d2[0]-d0[0]) - (s2[0]-s0[0])*(d1[0]-d0[0])) / den;
+    const dd = ((s1[0]-s0[0])*(d2[1]-d0[1]) - (s2[0]-s0[0])*(d1[1]-d0[1])) / den;
+    const e = d0[0] - a*s0[0] - c*s0[1], f = d0[1] - b*s0[0] - dd*s0[1];
+    const mx = (d0[0]+d1[0]+d2[0]) / 3, my = (d0[1]+d1[1]+d2[1]) / 3;
+    g.save();
+    g.beginPath();
+    [d0, d1, d2].forEach((p, i) => {
+      const x = mx + (p[0]-mx) * 1.04, y = my + (p[1]-my) * 1.04;
+      i ? g.lineTo(x, y) : g.moveTo(x, y);
+    });
+    g.closePath(); g.clip();
+    g.transform(a, b, c, dd, e, f);
+    g.drawImage(img, 0, 0);
+    g.restore();
+  }
+
+  function capturePhoto() {
+    const W = window.innerWidth, H = window.innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const g = cv.getContext('2d');
+    g.scale(dpr, dpr);
+    const vw = arVideo.videoWidth, vh = arVideo.videoHeight;
+    if (vw && vh) {                         // same crop as object-fit: cover
+      const k = Math.max(W / vw, H / vh);
+      g.drawImage(arVideo, (W - vw*k) / 2, (H - vh*k) / 2, vw*k, vh*k);
+    } else { g.fillStyle = '#000'; g.fillRect(0, 0, W, H); }
+    if (arM) {
+      const tex = buildTex(), N = 12, SW = 540, SH = 610, X0 = -110, Y0 = -180;
+      g.globalAlpha = FADES[fadeIdx];
+      const P = [];
+      for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) {
+        const lx = X0 + SW*i/N - 160, ly = Y0 + SH*j/N - 160;
+        const x = arM.c0[0]*lx + arM.c1[0]*ly + arM.c3[0];
+        const y = arM.c0[1]*lx + arM.c1[1]*ly + arM.c3[1];
+        const z = arM.c0[2]*lx + arM.c1[2]*ly + arM.c3[2];
+        const w = arF - z;
+        P.push(w > 1 ? [W/2 + x*arF/w, H/2 + y*arF/w] : null);
+      }
+      const Tx = tex.width / N, Ty = tex.height / N;
+      for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+        const q = [P[j*(N+1)+i], P[j*(N+1)+i+1], P[(j+1)*(N+1)+i], P[(j+1)*(N+1)+i+1]];
+        if (q.some(p => !p)) continue;
+        const s = [[i*Tx, j*Ty], [(i+1)*Tx, j*Ty], [i*Tx, (j+1)*Ty], [(i+1)*Tx, (j+1)*Ty]];
+        tri(g, tex, [s[0], s[1], s[2]], [q[0], q[1], q[2]]);
+        tri(g, tex, [s[1], s[3], s[2]], [q[1], q[3], q[2]]);
+      }
+      g.globalAlpha = 1;
+    }
+    // quick shutter flash
+    const fl = document.createElement('div');
+    fl.style.cssText = 'position:absolute;inset:0;background:#fff;opacity:.85;transition:opacity .35s;pointer-events:none';
+    arEl.appendChild(fl);
+    requestAnimationFrame(() => { fl.style.opacity = 0; });
+    setTimeout(() => fl.remove(), 450);
+
+    // synchronous encode so the share sheet still counts as a direct tap
+    const bin = atob(cv.toDataURL('image/jpeg', 0.92).split(',')[1]);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const file = new File([bytes], 'clock-on-my-wall.jpg', { type: 'image/jpeg' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'Braun AB 1 Clock' }).catch(() => {});
+    } else {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(file); a.download = file.name;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+  }
+  document.getElementById('arShot').addEventListener('click', capturePhoto);
+
+  document.getElementById('arModel').addEventListener('click', () => {
+    setModel(MODELS[(MODELS.indexOf(model) + 1) % MODELS.length]);
+  });
+
+  btnAR.addEventListener('click', startAR);
+  document.getElementById('arExit').addEventListener('click', stopAR);
+  document.getElementById('arCenter').addEventListener('click', () => { needPlace = true; });
+  document.getElementById('arLock').addEventListener('click', e => {
+    arLocked = !arLocked;
+    e.currentTarget.classList.toggle('active', arLocked);
+    e.currentTarget.textContent = arLocked ? t('unlock') : t('lock');
+  });
+  document.getElementById('arFade').addEventListener('click', () => {
+    fadeIdx = (fadeIdx + 1) % FADES.length;
+    arPlane.style.opacity = FADES[fadeIdx];
+  });
+  document.querySelectorAll('.ar-bottom .btn').forEach(b =>
+    b.addEventListener('click', () => document.getElementById(b.dataset.for).click()));
+  arAbout.addEventListener('click', () => document.getElementById('aboutCard').click());
+
+  /* ---------- Apply language to every label ---------- */
+  const TXT_IDS = {
+    btnSpeed: 'speed', btnSlow: 'slow', btnReset: 'reset', btnAbout: 'about', btnColor: 'color', btnAR: 'viewAR',
+    arExit: 'exit', arModel: 'model', arShot: 'photo', arCenter: 'center', arFade: 'fade', arHint: 'hint'
+  };
+
+  function applyLang() {
+    const L = I18N[lang];
+    document.documentElement.lang = lang;
+    DAYS = L.days;
+    MONTHS = L.months;
+    lastDateKey = '';
+    order = [];
+    Object.keys(TXT_IDS).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = L[TXT_IDS[id]];
+    });
+    document.querySelectorAll('.model-btn').forEach(b => { b.textContent = L['m_' + b.dataset.model]; });
+    const at = document.querySelector('.about-title');
+    if (at) at.textContent = L.aboutTitle;
+    btnBack.textContent = direction < 0 ? L.forward : L.back;
+    document.getElementById('arLock').textContent = arLocked ? L.unlock : L.lock;
+    syncSoundBtn();
+    syncSpeakUI();
+    syncAwakeBtn();
+    syncWorld();
+    syncTickBtn();
+    speakOpts[0].textContent = L.speakOff;
+    cuckooEl.setAttribute('aria-label', L.cuckooAria);
+    soundBtn.setAttribute('aria-label', L.cuckooToggleAria);
+    btnSpeak.setAttribute('aria-label', L.speakAria);
+    speakMenu.setAttribute('aria-label', L.speakMenuAria);
+    worldCells.forEach((c, i) => { c.name.textContent = L.cities[i]; });
+    lastWorldKey = -1;
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      const on = b.dataset.lang === lang;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.lang === lang) return;
+    lang = b.dataset.lang;
+    try { localStorage.setItem('braunLang', lang); } catch (e) {}
+    if (hasVoice) { try { speechSynthesis.cancel(); } catch (e) {} }
+    hideAbout();
+    applyLang();
+  }));
+  applyLang();
+
+  updateStatus();
+</script>
+</body>
+</html>
