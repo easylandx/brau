@@ -852,7 +852,9 @@
     .ar-stage { position: absolute; inset: 0; overflow: hidden; }
     .ar-plane { position: absolute; left: 50%; top: 50%; width: 320px; height: 320px; margin: -160px 0 0 -160px; transform-origin: 50% 50%; will-change: transform; }
     .ar-halo { position: absolute; inset: -110px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--rgb), .22), rgba(var(--rgb), 0) 68%); mix-blend-mode: screen; pointer-events: none; }
-    .ar-cuckoo { position: absolute; left: 50%; margin-left: -42px; bottom: calc(100% + 73px); pointer-events: none; cursor: default; }
+    .ar-cuckoo { position: absolute; left: 50%; margin-left: -42px; bottom: calc(100% + 73px); pointer-events: auto; cursor: pointer; }
+    /* Fixed on the wall: only the Photo button stays; tap the screen to bring the rest back */
+    .ar.fixed .ar-top .btn:not(#arShot), .ar.fixed .ar-bottom, .ar.fixed .ar-about, .ar.fixed .ar-hint { display: none !important; }
     .ar-brand { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 26px; text-align: center; }
     .ar-read { position: absolute; left: 0; right: 0; top: 100%; margin-top: 26px; text-align: center; color: rgba(var(--rgb), .85); text-shadow: 0 0 10px rgba(var(--rgb), .6); font-variant-numeric: tabular-nums; }
     .ar-time { font-size: 20px; font-weight: 300; letter-spacing: .2em; }
@@ -1163,7 +1165,7 @@
       speakOff: 'Speak off', speakN: n => 'Speak ' + n + 'm',
       aboutTitle: 'About time', viewAR: 'View on my wall · AR',
       waCopied: 'Image copied · press Ctrl+V in the chat to attach it',
-      exit: 'Exit', model: 'Model', photo: 'Photo', center: 'Center', lock: 'Lock', unlock: 'Unlock', fade: 'Fade',
+      exit: 'Exit', model: 'Model', photo: 'Photo', center: 'Center', lock: 'Fix', unlock: 'Unfix', fade: 'Fade',
       hint: 'Drag to move · pinch to resize',
       alertMotion: 'Motion access is needed so the clock stays fixed on your wall. Allow it for this site and try again.',
       alertAR: 'Could not start AR: ',
@@ -3484,6 +3486,7 @@
     arVideo.srcObject = null;
     if (arWake) { arWake.release().catch(() => {}); arWake = null; }
     arEl.hidden = true;
+    setArFixed(false);
   }
 
   function arTick() {
@@ -3534,7 +3537,7 @@
   }
 
   // Gestures: drag moves the clock along the wall, pinch resizes it
-  let tp = null;
+  let tp = null, tap = null;
   const pts = e => {
     const t = e.touches;
     return { n: t.length, x: t[0].clientX, y: t[0].clientY,
@@ -3544,8 +3547,10 @@
     if (e.target.closest('button')) return;
     e.preventDefault();
     tp = pts(e);
+    tap = e.touches.length === 1 ? { x: tp.x, y: tp.y, t: Date.now(), tgt: e.target } : null;
   }, { passive: false });
   arEl.addEventListener('touchmove', e => {
+    if (tap && e.touches.length === 1 && Math.hypot(e.touches[0].clientX - tap.x, e.touches[0].clientY - tap.y) > 10) tap = null;
     if (!tp || arLocked || e.target.closest('button')) return;
     e.preventDefault();
     const q = pts(e);
@@ -3557,7 +3562,24 @@
     }
     tp = q;
   }, { passive: false });
-  arEl.addEventListener('touchend', e => { tp = e.touches.length ? pts(e) : null; });
+  arEl.addEventListener('touchend', e => {
+    if (tap && !e.touches.length && Date.now() - tap.t < 600) {
+      const tgt = tap.tgt;
+      tap = null;
+      if (tgt.closest && tgt.closest('#arCuckoo')) { unlockAudio(); runChime(12, 1); }   // tap the cuckoo window: it comes out and the chosen chime plays
+      else if (arEl.classList.contains('fixed')) setArFixed(false);                      // tap anywhere else: buttons come back
+    }
+    tp = e.touches.length ? pts(e) : null;
+  });
+
+  // Fix the clock on the wall: hides every button except Photo (tap the screen to show them again)
+  function setArFixed(on) {
+    arLocked = on;
+    arEl.classList.toggle('fixed', on);
+    const b = document.getElementById('arLock');
+    b.classList.toggle('active', on);
+    b.textContent = on ? t('unlock') : t('lock');
+  }
 
   /* ---------- Photo: camera frame + clock, saved or shared ---------- */
   let arM = null;
@@ -3788,11 +3810,7 @@
   btnAR.addEventListener('click', startAR);
   document.getElementById('arExit').addEventListener('click', stopAR);
   document.getElementById('arCenter').addEventListener('click', () => { needPlace = true; });
-  document.getElementById('arLock').addEventListener('click', e => {
-    arLocked = !arLocked;
-    e.currentTarget.classList.toggle('active', arLocked);
-    e.currentTarget.textContent = arLocked ? t('unlock') : t('lock');
-  });
+  document.getElementById('arLock').addEventListener('click', () => setArFixed(!arLocked));
   document.getElementById('arFade').addEventListener('click', () => {
     fadeIdx = (fadeIdx + 1) % FADES.length;
     arPlane.style.opacity = FADES[fadeIdx];
