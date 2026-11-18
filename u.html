@@ -753,6 +753,9 @@
     .help-i:last-child { border-bottom: 0; }
     .help-h { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fluor); margin-bottom: 4px; }
     .help-t { font-size: 13px; font-weight: 300; line-height: 1.5; color: rgba(var(--rgb), 0.78); }
+    .help-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fluor); margin: 14px 0 3px; }
+    .help-line { display: flex; gap: 10px; }
+    .help-time { flex: 0 0 5.6em; font-variant-numeric: tabular-nums; color: rgba(var(--rgb), 0.95); }
     .help-demo-row { display: flex; align-items: stretch; gap: 8px; margin-top: 10px; }
     .help-demo { flex: 1; min-width: 0; letter-spacing: 0.15em; padding-left: 14px; padding-right: 12px; }
     .help-skip { flex: 0 0 auto; min-width: 0; letter-spacing: 0; padding: 0 13px; font-size: 12px; }
@@ -1133,7 +1136,7 @@
       ['Cuckoo', 'Choose a chime and its volume, or tap the little house to hear it. It sounds every half hour.'],
       ['Speak', 'The clock says the time out loud every 1 to 60 minutes.'],
       ['Auto sleep', 'Switch to “Always on” to keep the screen awake so the clock stays visible.'],
-      ['Bugle', 'One switch turns on the military bugle calls: First Call 06:50, Reveille 07:00, Mess Call 07:15, 12:00 and 17:30, Assembly 07:45, Work Call 08:00, Recall 16:30, Retreat 17:00, Tattoo 21:30 and Taps 22:00. Also Sick Call 07:30, Fatigue Call 08:15 and Mail Call 12:30; Pay Call on the 1st and 15th at 10:00, Church Call on Sundays at 09:30, Fire Call on Wednesdays at 10:30 and Charge on Fridays at 15:00. Also To the Color 07:55 and 17:05, Officers\u2019 Call 08:30, Attention 13:00 and Guard Mounting 18:00; Drill Call Monday to Friday at 09:00, Adjutant\u2019s Call on Saturdays at 09:50 and Roast Beef of Old England on Sundays at 13:30. Also the Toque de Oración at sunset, Cease Firing Monday to Friday at 11:45, Generala on Thursdays at 10:30, Boots and Saddles on Tuesdays and Thursdays at 14:00, Call to the Post on weekends at 16:00, and the hunting horns on Saturdays: La Bienvenue 09:00, Sighting 09:30 and Halali 18:30. Also Sweepers 06:30, Water Call 15:45 and Last Post 21:00 daily (and Last Post on 11 November at 11:00), Fagina Monday to Friday at 14:30, Piping the Side on Mondays at 11:00, Ruffles and Flourishes on Saturdays at 10:00, and Diana Floreada instead of Reveille on Sundays and Spanish public holidays. Also Stable Call at 06:40 and 15:30, School Call Monday to Friday at 10:15, Parley at 12:15, Toque de Paseo at 17:15, Toque de Arresto at 18:15, Rouse at 21:02 (and at 11:02 on 11 November, right after the Last Post), and the Scout Camp call (whistle and bugle) on Saturdays at 11:30 and 20:30.', 'demo'],
+      ['Bugle', 'One switch turns on the military bugle calls, listed here by day and time.\n# Every day\n06:30|Sweepers\n06:40|Stable Call\n06:50|First Call\n07:00|Reveille\n07:15|Mess Call\n07:30|Sick Call\n07:45|Assembly\n07:55|To the Color\n08:00|Work Call\n08:15|Fatigue Call\n08:30|Officers\u2019 Call\n12:00|Mess Call\n12:15|Parley\n12:30|Mail Call\n13:00|Attention\n15:30|Stable Call\n15:45|Water Call\n16:30|Recall\n17:00|Retreat\n17:05|To the Color\n17:15|Toque de Paseo\n17:30|Mess Call\n18:00|Guard Mounting\n18:15|Toque de Arresto\n21:00|Last Post\n21:02|Rouse\n21:30|Tattoo\n22:00|Taps\nSunset|Toque de Oración\n# Monday to Friday\n09:00|Drill Call\n10:15|School Call\n11:45|Cease Firing\n14:30|Fagina\n# Mondays\n11:00|Piping the Side\n# Tuesdays\n14:00|Boots and Saddles\n# Wednesdays\n10:30|Fire Call\n# Thursdays\n10:30|Generala\n14:00|Boots and Saddles\n# Fridays\n15:00|Charge\n# Saturdays\n09:00|La Bienvenue (hunt)\n09:30|Sighting (hunt)\n09:50|Adjutant\u2019s Call\n10:00|Ruffles and Flourishes\n11:30|Scout Camp call (whistle and bugle)\n16:00|Call to the Post\n18:30|Halali (hunt)\n20:30|Scout Camp call (whistle and bugle)\n# Sundays\n07:00|Diana Floreada (instead of Reveille)\n09:30|Church Call\n13:30|Roast Beef of Old England\n16:00|Call to the Post\n# 1st and 15th of each month\n10:00|Pay Call\n# Spanish public holidays\n07:00|Diana Floreada (instead of Reveille)\n# 11 November\n11:00|Last Post\n11:02|Rouse (right after the Last Post)', 'demo'],
       ['Pendulum tick', 'In Pendulum mode you can turn the ticking sound on or off.'],
       ['AR wall view', 'Where available, “View on my wall” places the clock in your camera view. Drag to move it, pinch to resize.'],
       ['Language', 'The EN / ES flags at the top right switch the language.']
@@ -1151,7 +1154,7 @@
       ['Cuco', 'Elige una campanada y su volumen, o toca la casita para oírla. Suena cada media hora.'],
       ['Voz', 'El reloj dice la hora en voz alta cada 1 a 60 minutos.'],
       ['Reposo auto', 'Cambia a “Siempre on” para mantener la pantalla encendida y ver siempre el reloj.'],
-      ['Corneta', 'Un solo botón activa los toques militares de corneta: Primera llamada 06:50, Diana 07:00, Rancho 07:15, 12:00 y 17:30, Asamblea 07:45, Llamada al trabajo 08:00, Fin de actividad 16:30, Retreta 17:00, Retreta nocturna 21:30 y Silencio 22:00. Además: Llamada a enfermería 07:30, Fajina 08:15 y Correo 12:30; Paga los días 1 y 15 a las 10:00, Servicio religioso los domingos a las 09:30, Incendio los miércoles a las 10:30 y A la carga los viernes a las 15:00. También: A la bandera 07:55 y 17:05, Llamada a oficiales 08:30, Atención 13:00 y Relevo de guardia 18:00; Instrucción de lunes a viernes a las 09:00, Llamada del ayudante los sábados a las 09:50 y Rancho británico (Roast Beef of Old England) los domingos a las 13:30. Además: Toque de Oración al atardecer, Alto el fuego de lunes a viernes a las 11:45, Generala los jueves a las 10:30, Botas y sillas martes y jueves a las 14:00, Llamada al poste los fines de semana a las 16:00 y toques de caza los sábados: La Bienvenue 09:00, Avistamiento 09:30 y Halali 18:30. Además: Limpieza de cubierta 06:30, Abrevar 15:45 y Último puesto 21:00 a diario (y el 11 de noviembre a las 11:00), Fagina de lunes a viernes a las 14:30, Honores de pito los lunes a las 11:00, Redobles y floreos los sábados a las 10:00, y Diana Floreada en lugar de la Diana los domingos y festivos de España. También: Llamada a cuadras a las 06:40 y 15:30, Llamada a clase de lunes a viernes a las 10:15, Parlamento a las 12:15, Toque de Paseo a las 17:15, Arresto / Prevención a las 18:15, Rouse a las 21:02 (y el 11 de noviembre a las 11:02, justo después del Último puesto) y el toque del Campamento Scout (silbato y corneta) los sábados a las 11:30 y 20:30.', 'demo'],
+      ['Corneta', 'Un solo botón activa los toques militares de corneta, ordenados aquí por días y horas.\n# Todos los días\n06:30|Limpieza de cubierta\n06:40|Llamada a cuadras\n06:50|Primera llamada\n07:00|Diana\n07:15|Rancho\n07:30|Llamada a enfermería\n07:45|Asamblea\n07:55|A la bandera\n08:00|Llamada al trabajo\n08:15|Fajina\n08:30|Llamada a oficiales\n12:00|Rancho\n12:15|Parlamento\n12:30|Correo\n13:00|Atención\n15:30|Llamada a cuadras\n15:45|Abrevar\n16:30|Fin de actividad\n17:00|Retreta\n17:05|A la bandera\n17:15|Toque de Paseo\n17:30|Rancho\n18:00|Relevo de guardia\n18:15|Arresto / Prevención\n21:00|Último puesto\n21:02|Rouse\n21:30|Retreta nocturna\n22:00|Silencio\nAtardecer|Toque de Oración\n# De lunes a viernes\n09:00|Instrucción\n10:15|Llamada a clase\n11:45|Alto el fuego\n14:30|Fagina\n# Lunes\n11:00|Honores de pito\n# Martes\n14:00|Botas y sillas\n# Miércoles\n10:30|Incendio\n# Jueves\n10:30|Generala\n14:00|Botas y sillas\n# Viernes\n15:00|A la carga\n# Sábados\n09:00|La Bienvenue (caza)\n09:30|Avistamiento (caza)\n09:50|Llamada del ayudante\n10:00|Redobles y floreos\n11:30|Campamento Scout (silbato y corneta)\n16:00|Llamada al poste\n18:30|Halali (caza)\n20:30|Campamento Scout (silbato y corneta)\n# Domingos\n07:00|Diana Floreada (en lugar de la Diana)\n09:30|Servicio religioso\n13:30|Rancho británico (Roast Beef of Old England)\n16:00|Llamada al poste\n# Días 1 y 15 de cada mes\n10:00|Paga\n# Festivos de España\n07:00|Diana Floreada (en lugar de la Diana)\n# 11 de noviembre\n11:00|Último puesto\n11:02|Rouse (justo después del Último puesto)', 'demo'],
       ['Tic del péndulo', 'En modo Péndulo puedes activar o desactivar el sonido del tic.'],
       ['Vista AR en la pared', 'Si tu dispositivo lo permite, “Ver en mi pared” coloca el reloj en la vista de la cámara. Arrastra para moverlo y pellizca para ajustarlo.'],
       ['Idioma', 'Las banderas EN / ES de arriba a la derecha cambian el idioma.']
@@ -1284,21 +1287,81 @@
     statusEl.textContent = parts.join(' ');
   }
 
-  function draw(now) {
-    const dt = now - lastFrame;
-    lastFrame = now;
-    virtualTime += dt * speed * direction;
+  /* ---------- Background engine ----------
+     Browsers pause requestAnimationFrame when the tab is hidden or covered, and throttle normal
+     timers. So the clock logic (chimes, cuckoo, bugle, spoken time, tick) lives in step(), which is
+     driven by the screen while it paints and by a Web Worker timer (never throttled) when it does not.
+     The sound timers also go through the worker (wsetTimeout / wclearTimeout). */
+  const bgCallbacks = new Map();
+  let bgSeq = 0, bgWorker = null, bgLastResume = 0, bgLastKa = 0;
 
+  function wsetTimeout(fn, ms) {
+    if (!bgWorker) return setTimeout(fn, ms);
+    const id = -(++bgSeq);                       // negative ids = worker timers (native ones are positive)
+    bgCallbacks.set(id, fn);
+    bgWorker.postMessage({ t: 'set', id, ms });
+    return id;
+  }
+  function wclearTimeout(id) {
+    if (bgWorker && bgCallbacks.has(id)) { bgCallbacks.delete(id); bgWorker.postMessage({ t: 'clear', id }); }
+    else clearTimeout(id);
+  }
+
+  function bgTick() {
+    const now = performance.now();
+    if (now - lastFrame > 80) {                   // the screen has stopped painting: run the clock here
+      if (audioCtx && audioCtx.state !== 'running' && now - bgLastResume > 2000) {
+        bgLastResume = now;
+        try { audioCtx.resume(); } catch (e) {}
+      }
+      step(now);
+    }
+    if (now - bgLastKa > 2000) { bgLastKa = now; kaTick(); }
+  }
+
+  try {
+    const src = "const T={};let iv=0;onmessage=e=>{const m=e.data;" +
+      "if(m.t==='tick'){clearInterval(iv);iv=setInterval(()=>postMessage({t:'tick'}),m.ms);}" +
+      "else if(m.t==='set'){T[m.id]=setTimeout(()=>{delete T[m.id];postMessage({t:'fire',id:m.id});},m.ms);}" +
+      "else if(m.t==='clear'){clearTimeout(T[m.id]);delete T[m.id];}};";
+    bgWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+    bgWorker.onmessage = e => {
+      const m = e.data;
+      if (m.t === 'tick') bgTick();
+      else if (m.t === 'fire') {
+        const fn = bgCallbacks.get(m.id);
+        bgCallbacks.delete(m.id);
+        if (fn) { try { fn(); } catch (err) {} }
+      }
+    };
+    bgWorker.onerror = () => { bgWorker = null; setInterval(bgTick, 250); };
+    bgWorker.postMessage({ t: 'tick', ms: 50 });
+  } catch (e) {
+    bgWorker = null;
+    setInterval(bgTick, 250);                     // fallback: throttled by the browser, but better than nothing
+  }
+
+  // The clock logic shared by the painter and the background timer
+  function step(now) {
+    let dt = now - lastFrame;
+    if (dt < 0) dt = 0; else lastFrame = now;     // never run backwards (the two drivers can interleave)
+    virtualTime += dt * speed * direction;
     const real = new Date(virtualTime);
-    const d = wallOf(virtualTime);          // this device's time, or the selected city's
+    const d = wallOf(virtualTime);                // this device's time, or the selected city's
     curDate = d;
     curReal = real;
     frameNow = now;
     checkBugle(d, dt);      // bugle first: if it lands on a chime / spoken time, those wait for it
     checkCuckoo(d, dt);
     checkSpeak(d, dt);
-    updateWorld(real, d);
     checkTick(dt);
+    return { real, d, dt };
+  }
+
+  function draw(now) {
+    const st = step(now);
+    const real = st.real, d = st.d;
+    updateWorld(real, d);
     wxTick();
     if (model === 'flip') updateFlaps(d);
     const hrs  = d.getHours() % 12;
@@ -2548,6 +2611,57 @@
   }
   ['pointerdown', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, unlockAudio, { passive: true }));
 
+  /* ---------- iPhone / iPad: keep the page alive in the background ----------
+     iOS suspends web pages that are not playing media. While a sound feature is armed we play an
+     inaudible looping clip (same trick video apps use) and register it with the lock screen. */
+  const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let kaEl = null, kaPaused = false, kaGesture = false;
+
+  function silentWavUrl() {
+    const rate = 8000, n = rate;                  // 1 second, mono, 16-bit
+    const buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    w(36, 'data'); v.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, ((i >> 5) & 1) ? 2 : -2, true);   // about -84 dB: inaudible
+    return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+  }
+  function kaWanted() {
+    return IS_IOS && !kaPaused && (cuckooOn || speakOn || bugleOn || (tickOn && model === 'pendulum'));
+  }
+  function kaStart() {
+    try {
+      if (!kaEl) {
+        kaEl = new Audio(silentWavUrl());
+        kaEl.loop = true;
+        kaEl.setAttribute('playsinline', '');
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({ title: 'Braun AB 1 Clock', artist: 'Chimes active' });
+          navigator.mediaSession.setActionHandler('play', () => { kaPaused = false; kaEl.play().catch(() => {}); });
+          navigator.mediaSession.setActionHandler('pause', () => { kaPaused = true; kaEl.pause(); });
+        }
+      }
+      if (kaEl.paused) kaEl.play().catch(() => {});
+    } catch (e) {}
+  }
+  function kaTick() {
+    if (!kaGesture) return;
+    if (kaWanted()) kaStart();
+    else if (kaEl && !kaEl.paused) kaEl.pause();
+  }
+  // Needs a real tap to be allowed to start
+  ['touchend', 'pointerup', 'click', 'keydown'].forEach(ev => window.addEventListener(ev, () => {
+    kaGesture = true; kaPaused = false;
+    if (kaWanted()) kaStart();
+  }, { passive: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    try { if (audioCtx && audioCtx.state !== 'running') audioCtx.resume(); } catch (e) {}
+    kaTick();
+  });
+
   // One "cuck-oo": a falling minor third, soft sine with a little overtone
   function playCuckooCall() {
     if (!cuckooOn || !audioCtx || audioCtx.state !== 'running') return;
@@ -2570,7 +2684,7 @@
     note(742, 730, 0.26, 0.36);    // -oo
   }
 
-  function later(fn, ms) { cuckooTimers.push(setTimeout(fn, ms)); }
+  function later(fn, ms) { cuckooTimers.push(wsetTimeout(fn, ms)); }
 
   function singCall() {
     playCuckooCall();
@@ -2596,7 +2710,7 @@
 
   // Switching off mid-call: stop everything and tuck the bird away at once
   function cancelCuckoo() {
-    cuckooTimers.forEach(clearTimeout);
+    cuckooTimers.forEach(id => wclearTimeout(id));
     cuckooTimers = [];
     cuckooEl.classList.remove('calling', 'open', 'out', 'ring');
     setTimeout(() => cuckooEl.classList.remove('ajar'), 450);
@@ -2810,7 +2924,7 @@
     if (!speakOn) return;
     const n = tries || 0;
     // waits for the bugle calls first, then for the cuckoo / chime that follows them
-    if ((cuckooBusy || bugleActive()) && n < 300) { setTimeout(() => sayWhenFree(text, n + 1), 700); return; }
+    if ((cuckooBusy || bugleActive()) && n < 300) { wsetTimeout(() => sayWhenFree(text, n + 1), 700); return; }
     say(text);
   }
 
@@ -3022,8 +3136,8 @@
       at += dur;
     });
     bugleBusy = true;
-    clearTimeout(bugleTimer);
-    bugleTimer = setTimeout(() => { bugleBusy = false; resumeAfterBugle(); }, (at - audioCtx.currentTime) * 1000 + 300);
+    wclearTimeout(bugleTimer);
+    bugleTimer = wsetTimeout(() => { bugleBusy = false; resumeAfterBugle(); }, (at - audioCtx.currentTime) * 1000 + 300);
   }
 
   // True while a bugle call plays or more are waiting in the queue
@@ -3051,7 +3165,7 @@
     const go = tries => {
       if (!bugleOn) { bugleQ = []; bugleDraining = false; return; }
       const fast = speed > 8;
-      if (bugleBusy && tries < 300) { setTimeout(() => go(tries + 1), fast ? 100 : 700); return; }
+      if (bugleBusy && tries < 300) { wsetTimeout(() => go(tries + 1), fast ? 100 : 700); return; }
       const name = bugleQ.shift();
       if (name) playBugle(name, 1);                 // always normal tempo, whatever the clock speed
       bugleDraining = false;
@@ -3088,7 +3202,7 @@
     unlockAudio();
     bugleOn = !bugleOn;
     lastBug = null;
-    if (!bugleOn) { bugleQ = []; pendingChime = null; if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); } }
+    if (!bugleOn) { bugleQ = []; pendingChime = null; if (bugleBusy) { wclearTimeout(bugleTimer); bugleBusy = false; resetMaster(); } }
     try { localStorage.setItem('braunBugle', bugleOn ? 'on' : 'off'); } catch (e) {}
     syncBugleBtn();
     if (bugleOn) setTimeout(() => playBugle('work'), 150);      // short sample so you hear it is armed
@@ -3141,7 +3255,7 @@
     if (!demoOn) return;
     demoOn = false;
     clearTimeout(demoTimer);
-    if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
+    if (bugleBusy) { wclearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
     syncDemoBtn();
   }
   function demoStep() {
@@ -3157,7 +3271,7 @@
   function skipBugleDemo(dir) {
     unlockAudio();
     clearTimeout(demoTimer);
-    if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
+    if (bugleBusy) { wclearTimeout(bugleTimer); bugleBusy = false; resetMaster(); }
     let target = demoOn ? demoIdx - 1 + dir : (dir > 0 ? 0 : BUGLE_DEMO.length - 1);
     if (target < 0) target = 0;
     if (target >= BUGLE_DEMO.length) { demoOn = false; demoIdx = BUGLE_DEMO.length; syncDemoBtn(); return; }
@@ -3605,7 +3719,19 @@
     H.items.forEach(it => {
       const row = document.createElement('div'); row.className = 'help-i';
       const h = document.createElement('div'); h.className = 'help-h'; h.textContent = it[0];
-      const p = document.createElement('div'); p.className = 'help-t'; p.textContent = it[1];
+      const p = document.createElement('div'); p.className = 'help-t';
+      if (it[1].indexOf('\n') < 0) p.textContent = it[1];
+      else it[1].split('\n').forEach(line => {          // "# Heading" = group title, "time|call" = one row
+        const d = document.createElement('div');
+        if (line.charAt(0) === '#') { d.className = 'help-sub'; d.textContent = line.slice(1).trim(); }
+        else if (line.indexOf('|') > 0) {
+          const k = line.split('|');
+          const a = document.createElement('span'); a.className = 'help-time'; a.textContent = k[0];
+          const b = document.createElement('span'); b.textContent = k.slice(1).join('|');
+          d.className = 'help-line'; d.appendChild(a); d.appendChild(b);
+        } else d.textContent = line;
+        p.appendChild(d);
+      });
       row.appendChild(h); row.appendChild(p);
       if (it[2] === 'demo') {
         const dr = document.createElement('div'); dr.className = 'help-demo-row';
@@ -3621,7 +3747,7 @@
         mk('help-skip', 'bugleDemoPrev', H.prevCall, () => skipBugleDemo(-1)).textContent = '|\u25C0';
         mk('help-demo', 'bugleDemoBtn', null, toggleBugleDemo);
         mk('help-skip', 'bugleDemoNext', H.nextCall, () => skipBugleDemo(1)).textContent = '\u25B6|';
-        row.appendChild(dr);
+        if (p.children.length > 1) p.insertBefore(dr, p.children[1]); else row.appendChild(dr);
       }
       body.appendChild(row);
     });
