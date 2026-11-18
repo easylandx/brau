@@ -2707,7 +2707,7 @@
     return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
   }
   function kaWanted() {
-    return IS_IOS && !kaPaused && (cuckooOn || speakOn || bugleOn || (tickOn && model === 'pendulum'));
+    return IS_IOS && !kaPaused && !arActive && (cuckooOn || speakOn || bugleOn || (tickOn && model === 'pendulum'));
   }
   function kaStart() {
     try {
@@ -3471,6 +3471,8 @@
     arVideo.play().catch(() => {});
     arEl.hidden = false;
     arActive = true;
+    arBad = 0;
+    try { if (kaEl && !kaEl.paused) kaEl.pause(); } catch (e) {}
     needPlace = true;
     setF();
     const hint = document.getElementById('arHint');
@@ -3489,7 +3491,33 @@
     setArFixed(false);
   }
 
+  // Keeps the camera picture alive: replays a paused video, and restarts the camera if the browser cut it
+  // (iOS can freeze or end the feed when audio starts, the screen locks or the page is interrupted)
+  let arCamBusy = false, arCamLast = 0, arBad = 0;
+  function arKeepVideo() {
+    const now = performance.now();
+    if (!arActive || arCamBusy || now - arCamLast < 1200) return;
+    arCamLast = now;
+    const tr = arStream && arStream.getVideoTracks()[0];
+    const ended = !tr || tr.readyState !== 'live';
+    if (!ended && arVideo.paused) arVideo.play().catch(() => {});
+    arBad = (!ended && arVideo.readyState < 2) ? arBad + 1 : 0;
+    if (!ended && arBad < 3) return;
+    arBad = 0;
+    arCamBusy = true;
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false }).then(s => {
+      if (!arActive) { s.getTracks().forEach(x => x.stop()); return; }
+      if (arStream) arStream.getTracks().forEach(x => x.stop());
+      arStream = s;
+      arVideo.srcObject = s;
+      arVideo.play().catch(() => {});
+    }).catch(() => {}).then(() => { arCamBusy = false; });
+  }
+  arVideo.addEventListener('pause', () => { if (arActive && document.visibilityState === 'visible') arVideo.play().catch(() => {}); });
+  document.addEventListener('visibilitychange', () => { if (arActive && document.visibilityState === 'visible') { arCamLast = 0; arKeepVideo(); } });
+
   function arTick() {
+    arKeepVideo();
     if (!ori) return;
     const R3 = rotM(ori);
     if (needPlace) {                       // pin the clock where the camera is pointing now
@@ -3566,7 +3594,7 @@
     if (tap && !e.touches.length && Date.now() - tap.t < 600) {
       const tgt = tap.tgt;
       tap = null;
-      if (tgt.closest && tgt.closest('#arCuckoo')) { unlockAudio(); runChime(12, 1); }   // tap the cuckoo window: it comes out and the chosen chime plays
+      if (tgt.closest && tgt.closest('#arCuckoo')) { unlockAudio(); runChime(12, 1); arVideo.play().catch(() => {}); }   // tap the cuckoo window: it comes out and the chosen chime plays
       else if (arEl.classList.contains('fixed')) setArFixed(false);                      // tap anywhere else: buttons come back
     }
     tp = e.touches.length ? pts(e) : null;
