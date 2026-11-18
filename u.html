@@ -1294,9 +1294,9 @@
     curDate = d;
     curReal = real;
     frameNow = now;
+    checkBugle(d, dt);      // bugle first: if it lands on a chime / spoken time, those wait for it
     checkCuckoo(d, dt);
     checkSpeak(d, dt);
-    checkBugle(d, dt);
     updateWorld(real, d);
     checkTick(dt);
     wxTick();
@@ -2477,6 +2477,7 @@
   const soundBtn = document.getElementById('cuckooSound');
   let cuckooBusy = false;
   let lastBucket = null;        // { key, h, half } of the half-hour slot the clock is in
+  let pendingChime = null;      // scheduled chime that had to wait for a bugle call: { h, half, at }
   let lastVT = null;
   let cuckooOn = true;          // off = no sound and the bird stays inside
   let cuckooTimers = [];
@@ -2644,7 +2645,10 @@
     later(() => cuckooEl.classList.remove('ring'), 170);
   }
 
-  function runChime(h, half) {
+  function runChime(h, half, sched) {
+    // A chime that is due while a bugle call is playing (or queued) is not lost: the bugle keeps
+    // priority and the chosen sound (cuckoo, Westminster, bell, tick) follows right after it.
+    if (sched && cuckooOn && bugleActive() && speed <= 8) { pendingChime = { h, half, at: Date.now() }; return; }
     if (chimeType === 'cuckoo') { runCuckoo(half ? 1 : (h % 12 || 12)); return; }
     if (!cuckooOn || cuckooBusy || bugleBusy) return;
     cuckooBusy = true;
@@ -2705,7 +2709,7 @@
     if (dt > 1500) return;
     // moving forward the boundary we crossed starts the new slot; in reverse it starts the old one
     const hit = direction > 0 ? cur : prev;
-    runChime(hit.h, hit.half);
+    runChime(hit.h, hit.half, true);
   }
 
   cuckooEl.addEventListener('click', () => { unlockAudio(); runChime(12, 1); });   // tap the house for a sample (half-hour version)
@@ -2804,7 +2808,9 @@
   // Wait for the cuckoo to finish its calls so the two never talk over each other
   function sayWhenFree(text, tries) {
     if (!speakOn) return;
-    if (cuckooBusy && (tries || 0) < 60) { setTimeout(() => sayWhenFree(text, (tries || 0) + 1), 700); return; }
+    const n = tries || 0;
+    // waits for the bugle calls first, then for the cuckoo / chime that follows them
+    if ((cuckooBusy || bugleActive()) && n < 300) { setTimeout(() => sayWhenFree(text, n + 1), 700); return; }
     say(text);
   }
 
@@ -3017,7 +3023,18 @@
     });
     bugleBusy = true;
     clearTimeout(bugleTimer);
-    bugleTimer = setTimeout(() => { bugleBusy = false; }, (at - audioCtx.currentTime) * 1000 + 300);
+    bugleTimer = setTimeout(() => { bugleBusy = false; resumeAfterBugle(); }, (at - audioCtx.currentTime) * 1000 + 300);
+  }
+
+  // True while a bugle call plays or more are waiting in the queue
+  function bugleActive() { return bugleBusy || bugleQ.length > 0; }
+
+  // After the last queued bugle call: the chime that was due meanwhile sounds now (the spoken time follows it)
+  function resumeAfterBugle() {
+    if (bugleQ.length) return;                       // more calls to come; wait for the last one
+    const p = pendingChime;
+    pendingChime = null;
+    if (p && Date.now() - p.at < 5 * 60 * 1000) runChime(p.h, p.half, false);
   }
 
   // Calls wait in a short queue and play one after another (never over each other).
@@ -3071,7 +3088,7 @@
     unlockAudio();
     bugleOn = !bugleOn;
     lastBug = null;
-    if (!bugleOn) { bugleQ = []; if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); } }
+    if (!bugleOn) { bugleQ = []; pendingChime = null; if (bugleBusy) { clearTimeout(bugleTimer); bugleBusy = false; resetMaster(); } }
     try { localStorage.setItem('braunBugle', bugleOn ? 'on' : 'off'); } catch (e) {}
     syncBugleBtn();
     if (bugleOn) setTimeout(() => playBugle('work'), 150);      // short sample so you hear it is armed
